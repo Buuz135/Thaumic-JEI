@@ -1,6 +1,6 @@
 package com.buuz135.thaumicjei.category;
 
-import com.buuz135.thaumicjei.ThaumicJEI;
+import com.buuz135.thaumicjei.AlphaDrawable;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -11,10 +11,10 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.opengl.GL11;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
@@ -46,16 +46,16 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(108, 138);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 0, 0);
     }
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        minecraft.renderEngine.bindTexture(new ResourceLocation(ThaumicJEI.MOD_ID, "textures/gui/gui_researchbook_overlay.png"));
+        minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
+        GL11.glEnable(3042);
         Gui.drawModalRectWithCustomSizedTexture(51 - 16, 0, 40, 6, 32, 32, 512, 512);
-        Gui.drawModalRectWithCustomSizedTexture(0, 36, 225, 31, 102, 102, 512, 512);
         Gui.drawModalRectWithCustomSizedTexture(0-18, 4, 135,152, 23,23, 512, 512);
-        GlStateManager.color(1, 1, 1, 1);
+        GL11.glDisable(3042);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         }
         int crystalAmount = 0;
         for (ItemStack crystal : recipeWrapper.getRecipe().getCrystals()){
-            recipeLayout.getItemStacks().init(slot+crystalAmount, true, 118, 7+22*crystalAmount);
+            recipeLayout.getItemStacks().init(slot + crystalAmount, true, 118, 6 + 22 * crystalAmount);
             recipeLayout.getItemStacks().set(slot+crystalAmount, crystal);
             ++crystalAmount;
         }

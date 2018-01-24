@@ -1,6 +1,6 @@
 package com.buuz135.thaumicjei.category;
 
-import com.buuz135.thaumicjei.ThaumicJEI;
+import com.buuz135.thaumicjei.AlphaDrawable;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -11,7 +11,6 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -47,7 +46,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(108, 138);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 2, 5, 109, 129);
     }
 
     @Override
@@ -61,9 +60,10 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        minecraft.renderEngine.bindTexture(new ResourceLocation(ThaumicJEI.MOD_ID, "textures/gui/gui_researchbook_overlay.png"));
-        Gui.drawModalRectWithCustomSizedTexture(0, 0, 2, 5, 109,129, 512, 512);
+        minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
+        GL11.glEnable(3042);
         Gui.drawModalRectWithCustomSizedTexture(6, 6, 199, 168, 26,26, 512, 512);
+        GL11.glDisable(3042);
     }
 
     public static class CrucibleWrapper extends BlankRecipeWrapper{
@@ -104,6 +104,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
                 GL11.glColor4f(1,1,1,1);
                 GL11.glScaled(0.5,0.5,0.5);
                 minecraft.currentScreen.drawString(minecraft.fontRendererObj, TextFormatting.WHITE+""+recipe.aspects.getAmount(aspect), 28+(ASPECT_X-center+x*space)*2, ASPECT_Y*2+26, 0);
+                GL11.glDisable(3042);
                 GL11.glPopMatrix();
                 ++x;
             }
