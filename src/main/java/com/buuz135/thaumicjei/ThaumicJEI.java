@@ -13,7 +13,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod(
         modid = ThaumicJEI.MOD_ID,
         name = ThaumicJEI.MOD_NAME,
-        version = ThaumicJEI.VERSION
+        version = ThaumicJEI.VERSION,
+        dependencies = "required-after:JEI@[1.10.2-3.14.7.420,);required-after:thaumcraft@[6.0BETA2,);"
 )
 public class ThaumicJEI {
 
