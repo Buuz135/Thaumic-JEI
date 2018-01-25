@@ -2,16 +2,16 @@ package com.buuz135.thaumicjei;
 
 import com.buuz135.thaumicjei.category.ArcaneWorkbenchCategory;
 import com.buuz135.thaumicjei.category.CrucibleCategory;
+import com.buuz135.thaumicjei.category.InfusionCategory;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
-import thaumcraft.api.crafting.ShapedArcaneRecipe;
+import thaumcraft.api.crafting.InfusionRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +38,12 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         CrucibleCategory crucibleCategory = new CrucibleCategory(registry.getJeiHelpers().getGuiHelper());
         registry.addRecipeCategories(crucibleCategory);
         registry.addRecipeHandlers(new CrucibleCategory.CrucibleHandler());
-        registry.addRecipeCategoryCraftingItem(new ItemStack(Blocks.STONE));
         registry.addRecipeCategoryCraftingItem(new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "crucible").toString())), crucibleCategory.getUid());
+
+        InfusionCategory infusionCategory = new InfusionCategory();
+        registry.addRecipeCategories(infusionCategory);
+        registry.addRecipeHandlers(new InfusionCategory.InfusionHandler());
+        registry.addRecipeCategoryCraftingItem(new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "infusion_matrix").toString())), infusionCategory.getUid());
 
         List<Object> objects = new ArrayList<>();
         List<String> handledClasses = new ArrayList<>();
@@ -57,14 +61,20 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                         objects.add(new CrucibleCategory.CrucibleWrapper((CrucibleRecipe) recipe));
                         if (!handledClasses.contains(recipe.getClass().getName())) handledClasses.add(recipe.getClass().getName());
                     }
+                    if (recipe instanceof InfusionRecipe) {
+                        if (((InfusionRecipe) recipe).recipeInput != null && ((InfusionRecipe) recipe).recipeOutput != null)
+                            objects.add(new InfusionCategory.InfusionWrapper((InfusionRecipe) recipe));
+                        if (!handledClasses.contains(recipe.getClass().getName()))
+                            handledClasses.add(recipe.getClass().getName());
+                    }
                 }
             }
         }
-        for (String s : unhandledClasses){
-            if (!handledClasses.contains(s)){
-                System.out.println(s);
-            }
-        }
+//        for (String s : unhandledClasses){
+//            if (!handledClasses.contains(s)){
+//                //System.out.println(s);
+//            }
+//        }
         registry.addRecipes(objects);
     }
 
