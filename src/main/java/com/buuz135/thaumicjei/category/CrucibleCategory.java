@@ -66,7 +66,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
         GL11.glDisable(3042);
     }
 
-    public static class CrucibleWrapper extends BlankRecipeWrapper{
+    public static class CrucibleWrapper extends BlankRecipeWrapper implements IHasResearch {
 
         private final CrucibleRecipe recipe;
         private static final int ASPECT_Y = 66;
@@ -125,6 +125,11 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
                 }
             }
             return Arrays.asList();
+        }
+
+        @Override
+        public String[] getResearch() {
+            return recipe.research;
         }
     }
 

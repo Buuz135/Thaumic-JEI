@@ -126,7 +126,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
     }
 
 
-    public static class ArcaneWorkbenchWrapper extends BlankRecipeWrapper {
+    public static class ArcaneWorkbenchWrapper extends BlankRecipeWrapper implements IHasResearch {
 
         private final IArcaneRecipe recipe;
 
@@ -186,6 +186,11 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
         public IArcaneRecipe getRecipe() {
             return recipe;
+        }
+
+        @Override
+        public String[] getResearch() {
+            return new String[]{recipe.getResearch()};
         }
     }
 }

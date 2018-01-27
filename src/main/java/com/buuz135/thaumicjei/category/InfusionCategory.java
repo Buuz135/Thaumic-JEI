@@ -71,7 +71,7 @@ public class InfusionCategory extends BlankRecipeCategory<InfusionCategory.Infus
         }
     }
 
-    public static class InfusionWrapper extends BlankRecipeWrapper {
+    public static class InfusionWrapper extends BlankRecipeWrapper implements IHasResearch {
 
         private static final int ASPECT_Y = 115;
         private static final int ASPECT_X = 46;
@@ -154,6 +154,11 @@ public class InfusionCategory extends BlankRecipeCategory<InfusionCategory.Infus
                 }
             }
             return Arrays.asList();
+        }
+
+        @Override
+        public String[] getResearch() {
+            return new String[]{recipe.research};
         }
     }
 
