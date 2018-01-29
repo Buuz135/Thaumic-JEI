@@ -1,6 +1,7 @@
 package com.buuz135.thaumicjei.category;
 
 import com.buuz135.thaumicjei.AlphaDrawable;
+import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -19,7 +20,6 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.CrucibleRecipe;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +27,9 @@ import java.util.List;
 public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.CrucibleWrapper> {
 
     public static final String UUID = "THAUMCRAFT_CRUCIBLE";
+    public static final int ASPECT_Y = 66;
+    public static final int ASPECT_X = 56;
+    public static final int SPACE = 22;
 
     private final IGuiHelper helper;
 
@@ -56,6 +59,14 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
         recipeLayout.getItemStacks().init(1, true, -8,2);
         recipeLayout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(0));
+
+        int center = (ingredients.getInputs(Aspect.class).size() * SPACE) / 2;
+        int x = 0;
+        for (List<Aspect> aspectList : ingredients.getInputs(Aspect.class)) {
+            recipeLayout.getIngredientsGroup(Aspect.class).init(x + 1, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(Aspect.class).set(x + 1, aspectList);
+            ++x;
+        }
     }
 
     @Override
@@ -69,8 +80,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
     public static class CrucibleWrapper extends BlankRecipeWrapper implements IHasResearch {
 
         private final CrucibleRecipe recipe;
-        private static final int ASPECT_Y = 66;
-        private static final int ASPECT_X = 56;
+
 
         public CrucibleWrapper(CrucibleRecipe recipe) {
             this.recipe = recipe;
@@ -85,26 +95,19 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
                 in.add((List<ItemStack>) recipe.catalyst);
                 ingredients.setInputLists(ItemStack.class, in);
             }
+            ingredients.setInputs(Aspect.class, Arrays.asList(recipe.aspects.getAspectsSortedByAmount()));
             ingredients.setOutput(ItemStack.class, recipe.getRecipeOutput());
         }
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            int space = 22;
-            int center = (recipe.aspects.size()*space)/2;
+            int center = (recipe.aspects.size() * SPACE) / 2;
             int x = 0;
             for (Aspect aspect : recipe.aspects.getAspectsSortedByAmount()){
                 minecraft.renderEngine.bindTexture(aspect.getImage());
                 GL11.glPushMatrix();
-                GL11.glEnable(3042);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                Color c = new Color(aspect.getColor());
-                GL11.glColor4f((float)c.getRed() / 255.0F, (float)c.getGreen() / 255.0F, (float)c.getBlue() / 255.0F, 1.0F);
-                Gui.drawModalRectWithCustomSizedTexture(ASPECT_X-center+x*space, ASPECT_Y, 0,0,16,16,16,16);
-                GL11.glColor4f(1,1,1,1);
                 GL11.glScaled(0.5,0.5,0.5);
-                minecraft.currentScreen.drawString(minecraft.fontRendererObj, TextFormatting.WHITE+""+recipe.aspects.getAmount(aspect), 28+(ASPECT_X-center+x*space)*2, ASPECT_Y*2+26, 0);
-                GL11.glDisable(3042);
+                minecraft.currentScreen.drawString(minecraft.fontRendererObj, TextFormatting.WHITE + "" + recipe.aspects.getAmount(aspect), 28 + (ASPECT_X - center + x * SPACE) * 2, ASPECT_Y * 2 + 26, 0);
                 GL11.glPopMatrix();
                 ++x;
             }
@@ -113,17 +116,6 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
         @Nullable
         @Override
         public List<String> getTooltipStrings(int mouseX, int mouseY) {
-            if (mouseY > ASPECT_Y && mouseY < ASPECT_Y + 16){
-                int space = 22;
-                int center = (recipe.aspects.size()*space)/2;
-                int x = 0;
-                for (Aspect aspect : recipe.aspects.getAspectsSortedByAmount()){
-                    if (mouseX > ASPECT_X-center+x*space && mouseX < ASPECT_X-center+x*space +16){
-                        return Arrays.asList(TextFormatting.AQUA+aspect.getName(), TextFormatting.GRAY+aspect.getLocalizedDescription());
-                    }
-                    ++x;
-                }
-            }
             return Arrays.asList();
         }
 
