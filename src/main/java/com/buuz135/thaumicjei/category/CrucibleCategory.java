@@ -19,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.CrucibleRecipe;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,12 +110,6 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
                 GL11.glPopMatrix();
                 ++x;
             }
-        }
-
-        @Nullable
-        @Override
-        public List<String> getTooltipStrings(int mouseX, int mouseY) {
-            return Arrays.asList();
         }
 
         @Override
