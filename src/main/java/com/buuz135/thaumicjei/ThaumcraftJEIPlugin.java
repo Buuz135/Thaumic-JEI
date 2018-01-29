@@ -1,11 +1,13 @@
 package com.buuz135.thaumicjei;
 
 import com.buuz135.thaumicjei.category.ArcaneWorkbenchCategory;
+import com.buuz135.thaumicjei.category.AspectFromItemStackCategory;
 import com.buuz135.thaumicjei.category.CrucibleCategory;
 import com.buuz135.thaumicjei.category.InfusionCategory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientHelper;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
+import com.google.common.collect.ArrayListMultimap;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.block.Block;
@@ -13,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectHelper;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
@@ -81,6 +84,31 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 //            }
 //        }
         registry.addRecipes(objects);
+
+
+        AspectFromItemStackCategory aspectFromItemStackCategory = new AspectFromItemStackCategory();
+        registry.addRecipeCategories(aspectFromItemStackCategory);
+        registry.addRecipeHandlers(new AspectFromItemStackCategory.AspectFromItemStackHandler());
+
+        //Aspect cache
+        ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
+        for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class)) {
+            for (Aspect aspect : AspectHelper.getObjectAspects(stack).getAspectsSortedByAmount()) {
+                aspectCache.put(aspect, stack);
+            }
+        }
+
+        for (Aspect aspect : aspectCache.keySet()) {
+            List<ItemStack> itemStacks = aspectCache.get(aspect);
+            List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
+            int start = 0;
+            while (start < itemStacks.size()) {
+                wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(aspect, itemStacks.subList(start, Math.min(start + 36, itemStacks.size()))));
+                start += 36;
+            }
+            registry.addRecipes(wrappers);
+        }
+
     }
 
     @Override
