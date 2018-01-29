@@ -86,7 +86,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         }
         int crystalAmount = 0;
         for (ItemStack crystal : recipeWrapper.getRecipe().getCrystals()){
-            recipeLayout.getItemStacks().init(slot + crystalAmount, true, 118, 6 + 22 * crystalAmount);
+            recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118, 6 + 22 * crystalAmount);
             recipeLayout.getItemStacks().set(slot+crystalAmount, crystal);
             ++crystalAmount;
         }
