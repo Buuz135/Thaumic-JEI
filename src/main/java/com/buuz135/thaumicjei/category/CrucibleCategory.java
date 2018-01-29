@@ -53,10 +53,10 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, CrucibleWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, false, 51 -6, 8);
+        recipeLayout.getItemStacks().init(0, false, 51 - 6, 8);
         recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
 
-        recipeLayout.getItemStacks().init(1, true, -8,2);
+        recipeLayout.getItemStacks().init(1, true, -8, 2);
         recipeLayout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(0));
 
         int center = (ingredients.getInputs(Aspect.class).size() * SPACE) / 2;
@@ -72,7 +72,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
     public void drawExtras(Minecraft minecraft) {
         minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
         GL11.glEnable(3042);
-        Gui.drawModalRectWithCustomSizedTexture(6, 6, 199, 168, 26,26, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(6, 6, 199, 168, 26, 26, 512, 512);
         GL11.glDisable(3042);
     }
 
@@ -87,9 +87,9 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            if (recipe.catalyst instanceof ItemStack){
+            if (recipe.catalyst instanceof ItemStack) {
                 ingredients.setInput(ItemStack.class, (ItemStack) recipe.catalyst);
-            }else{
+            } else {
                 List<List<ItemStack>> in = new ArrayList<>();
                 in.add((List<ItemStack>) recipe.catalyst);
                 ingredients.setInputLists(ItemStack.class, in);
@@ -102,10 +102,10 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             int center = (recipe.aspects.size() * SPACE) / 2;
             int x = 0;
-            for (Aspect aspect : recipe.aspects.getAspectsSortedByAmount()){
+            for (Aspect aspect : recipe.aspects.getAspectsSortedByAmount()) {
                 minecraft.renderEngine.bindTexture(aspect.getImage());
                 GL11.glPushMatrix();
-                GL11.glScaled(0.5,0.5,0.5);
+                GL11.glScaled(0.5, 0.5, 0.5);
                 minecraft.currentScreen.drawString(minecraft.fontRendererObj, TextFormatting.WHITE + "" + recipe.aspects.getAmount(aspect), 28 + (ASPECT_X - center + x * SPACE) * 2, ASPECT_Y * 2 + 26, 0);
                 GL11.glPopMatrix();
                 ++x;

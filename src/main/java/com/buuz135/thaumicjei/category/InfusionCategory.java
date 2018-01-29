@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -93,22 +92,24 @@ public class InfusionCategory extends BlankRecipeCategory<InfusionCategory.Infus
         public void getIngredients(IIngredients ingredients) {
             List<List<ItemStack>> inputs = new ArrayList<>();
             if (recipe.recipeInput instanceof ItemStack) {
-                inputs.add(Arrays.asList((ItemStack) recipe.recipeInput));
+                inputs.add(Arrays.asList(((ItemStack) recipe.recipeInput).copy()));
             } else if (recipe.recipeInput != null) {
-                inputs.add((List<ItemStack>) recipe.recipeInput);
+                List<ItemStack> stacks = new ArrayList<>();
+                for (ItemStack o : (List<ItemStack>) recipe.recipeInput) {
+                    stacks.add(o.copy());
+                }
+                inputs.add(stacks);
             }
             if (recipe.recipeOutput instanceof ItemStack) {
                 ingredients.setOutput(ItemStack.class, (ItemStack) recipe.recipeOutput);
             } else if (recipe.recipeInput != null && recipe.recipeOutput != null) {
                 for (ItemStack stack : inputs.get(0)) {
                     if (stack != null) {
-                        NBTTagCompound compound = stack.getTagCompound();
-                        if (compound == null) compound = new NBTTagCompound();
-                        compound.setTag((String) ((Object[]) recipe.recipeOutput)[0], (NBTBase) ((Object[]) recipe.recipeOutput)[1]);
-                        stack.setTagCompound(compound);
+                        Object[] objects = (Object[]) recipe.recipeOutput;
+                        stack.setTagInfo((String) objects[0], (NBTBase) objects[1]);
+                        ingredients.setOutput(ItemStack.class, stack);
                     }
                 }
-                ingredients.setOutputs(ItemStack.class, inputs.get(0));
             }
             for (Object comp : recipe.components) {
                 if (comp instanceof ItemStack) {

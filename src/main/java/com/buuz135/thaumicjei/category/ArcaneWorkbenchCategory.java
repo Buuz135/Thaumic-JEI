@@ -54,7 +54,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
         GL11.glEnable(3042);
         Gui.drawModalRectWithCustomSizedTexture(51 - 16, 0, 40, 6, 32, 32, 512, 512);
-        Gui.drawModalRectWithCustomSizedTexture(0-18, 4, 135,152, 23,23, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(0 - 18, 4, 135, 152, 23, 23, 512, 512);
         GL11.glDisable(3042);
     }
 
@@ -68,14 +68,14 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         recipeLayout.getItemStacks().init(0, false, 51 - 9, 7);
         int sizeX = 3;
         int sizeY = 3;
-        if (recipeWrapper.getRecipe() instanceof ShapedArcaneRecipe){
+        if (recipeWrapper.getRecipe() instanceof ShapedArcaneRecipe) {
             sizeX = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).width;
             sizeY = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).height;
         }
         int slot = 1;
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
-            if (ingredients.getInputs(ItemStack.class).size() >= slot){
+                if (ingredients.getInputs(ItemStack.class).size() >= slot) {
                     recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30), 36 + 12 + (y) * 30);
                     if (ingredients.getInputs(ItemStack.class).get(slot - 1) != null) {
                         recipeLayout.getItemStacks().set(slot, ingredients.getInputs(ItemStack.class).get(slot - 1));
@@ -85,9 +85,9 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
             }
         }
         int crystalAmount = 0;
-        for (ItemStack crystal : recipeWrapper.getRecipe().getCrystals()){
+        for (ItemStack crystal : recipeWrapper.getRecipe().getCrystals()) {
             recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118, 6 + 22 * crystalAmount);
-            recipeLayout.getItemStacks().set(slot+crystalAmount, crystal);
+            recipeLayout.getItemStacks().set(slot + crystalAmount, crystal);
             ++crystalAmount;
         }
         recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
@@ -139,11 +139,10 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
             List<List<ItemStack>> lists = new ArrayList<>();
             List<Object> input = new ArrayList<>();
             ItemStack output = null;
-            if (recipe instanceof ShapedArcaneRecipe){
+            if (recipe instanceof ShapedArcaneRecipe) {
                 input = Arrays.asList(((ShapedArcaneRecipe) recipe).input);
                 output = ((ShapedArcaneRecipe) recipe).output;
-            }
-            else if (recipe instanceof ShapelessArcaneRecipe){
+            } else if (recipe instanceof ShapelessArcaneRecipe) {
                 input = ((ShapelessArcaneRecipe) recipe).getInput();
                 output = recipe.getRecipeOutput();
             }
@@ -162,7 +161,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            minecraft.fontRendererObj.drawString(TextFormatting.DARK_GRAY+String.valueOf(recipe.getVis()), 20-minecraft.fontRendererObj.getStringWidth(String.valueOf(recipe.getVis()))/2,12,0);
+            minecraft.fontRendererObj.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 20 - minecraft.fontRendererObj.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
         }
 
         @Override
@@ -173,7 +172,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         @Nullable
         @Override
         public List<String> getTooltipStrings(int mouseX, int mouseY) {
-            if (mouseX > -18 && mouseX < 34 && mouseY > 4 && mouseY < 28){
+            if (mouseX > -18 && mouseX < 34 && mouseY > 4 && mouseY < 28) {
                 return Arrays.asList("Vis Cost");
             }
             return null;
