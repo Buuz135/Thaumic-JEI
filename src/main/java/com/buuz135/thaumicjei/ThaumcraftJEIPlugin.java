@@ -1,9 +1,6 @@
 package com.buuz135.thaumicjei;
 
-import com.buuz135.thaumicjei.category.ArcaneWorkbenchCategory;
-import com.buuz135.thaumicjei.category.AspectFromItemStackCategory;
-import com.buuz135.thaumicjei.category.CrucibleCategory;
-import com.buuz135.thaumicjei.category.InfusionCategory;
+import com.buuz135.thaumicjei.category.*;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientHelper;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
@@ -11,6 +8,7 @@ import com.google.common.collect.ArrayListMultimap;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
@@ -89,6 +87,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         AspectFromItemStackCategory aspectFromItemStackCategory = new AspectFromItemStackCategory();
         registry.addRecipeCategories(aspectFromItemStackCategory);
         registry.addRecipeHandlers(new AspectFromItemStackCategory.AspectFromItemStackHandler());
+        registry.addRecipeCategoryCraftingItem(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "thaumonomicon").toString())), aspectFromItemStackCategory.getUid());
 
         //Aspect cache
         ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
@@ -97,18 +96,26 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                 aspectCache.put(aspect, stack);
             }
         }
-
+        List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
         for (Aspect aspect : aspectCache.keySet()) {
             List<ItemStack> itemStacks = aspectCache.get(aspect);
-            List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
             int start = 0;
             while (start < itemStacks.size()) {
                 wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(aspect, itemStacks.subList(start, Math.min(start + 36, itemStacks.size()))));
                 start += 36;
             }
-            registry.addRecipes(wrappers);
         }
+        registry.addRecipes(wrappers);
 
+        AspectCompoundCategory aspectCompoundCategory = new AspectCompoundCategory(registry.getJeiHelpers().getGuiHelper());
+        registry.addRecipeCategories(aspectCompoundCategory);
+        registry.addRecipeHandlers(new AspectCompoundCategory.AspectCompoundHandler());
+        registry.addRecipeCategoryCraftingItem(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "thaumonomicon").toString())), aspectCompoundCategory.getUid());
+        List<AspectCompoundCategory.AspectCompoundWrapper> compoundWrappers = new ArrayList<>();
+        for (Aspect aspect : Aspect.getCompoundAspects()) {
+            compoundWrappers.add(new AspectCompoundCategory.AspectCompoundWrapper(aspect));
+        }
+        registry.addRecipes(compoundWrappers);
     }
 
     @Override
