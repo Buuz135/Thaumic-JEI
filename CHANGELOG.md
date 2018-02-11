@@ -1,5 +1,6 @@
 # 1.1.1
 + Changed how items display in the JEI search for the aspect until TC fixes tooltips not showing in not container GUI
++ Forced Tab icons
 
 # 1.1
 + Aspects are now ingredients, they can be searched en JEI, see what 2 aspects make another aspect and what items create that aspect.

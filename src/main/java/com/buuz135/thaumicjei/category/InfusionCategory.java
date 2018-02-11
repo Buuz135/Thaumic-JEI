@@ -1,6 +1,7 @@
 package com.buuz135.thaumicjei.category;
 
 import com.buuz135.thaumicjei.AlphaDrawable;
+import com.buuz135.thaumicjei.ItemStackDrawable;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -9,6 +10,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
@@ -22,6 +24,7 @@ import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.InfusionRecipe;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +58,13 @@ public class InfusionCategory extends BlankRecipeCategory<InfusionCategory.Infus
         Gui.drawModalRectWithCustomSizedTexture(27, -35, 40, 6, 32, 32, 512, 512);
         GL11.glDisable(3042);
     }
+
+    @Nullable
+    @Override
+    public IDrawable getIcon() {
+        return new ItemStackDrawable(new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "infusion_matrix").toString())));
+    }
+
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, InfusionWrapper recipeWrapper, IIngredients ingredients) {

@@ -1,6 +1,7 @@
 package com.buuz135.thaumicjei.category;
 
 import com.buuz135.thaumicjei.AlphaDrawable;
+import com.buuz135.thaumicjei.ItemStackDrawable;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -9,6 +10,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
@@ -41,12 +43,18 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
     @Override
     public String getTitle() {
-        return "Arcane workbench";
+        return "Arcane Workbench";
     }
 
     @Override
     public IDrawable getBackground() {
         return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 0, 0);
+    }
+
+    @Nullable
+    @Override
+    public IDrawable getIcon() {
+        return new ItemStackDrawable(new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "arcane_workbench").toString())));
     }
 
     @Override
