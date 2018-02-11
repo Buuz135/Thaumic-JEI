@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectHelper;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
@@ -109,10 +108,12 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                 ThaumicJEI.LOGGER.info("Adding " + registry.getIngredientRegistry().getIngredients(ItemStack.class).size() + " to the aspect cache");
                 for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
                     if (!checkedItemStacksEmpty.contains(stack.getItem().getRegistryName().toString())) {
-                        AspectList list = AspectHelper.getObjectAspects(stack);
+                        AspectList list = new AspectList(stack);
                         if (list.size() > 0) {
                             for (Aspect aspect : list.getAspects()) {
-                                aspectCache.put(aspect, stack);
+                                ItemStack clone = stack.copy();
+                                clone.stackSize = list.getAmount(aspect);
+                                aspectCache.put(aspect, clone);
                             }
                         } else {
                             checkedItemStacksEmpty.add(stack.getItem().getRegistryName().toString());
