@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
         modid = ThaumicJEI.MOD_ID,
         name = ThaumicJEI.MOD_NAME,
         version = ThaumicJEI.VERSION,
-        dependencies = "required-after:JEI@[1.10.2-3.14.7.420,);required-after:thaumcraft@[6.0BETA4,);"
+        dependencies = "required-after:JEI@[1.10.2-3.14.7.420,);required-after:thaumcraft@[6.0BETA7,);"
 )
 public class ThaumicJEI {
 
