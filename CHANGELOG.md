@@ -1,3 +1,7 @@
+# 1.1.2
++ Made aspect checking a little bit faster (I dont think so)
++ Added descriptions for TC custom recipes that aren't shown in JEI (Thanks to thePalindrome for the descriptions)
+
 # 1.1.1
 + Changed how items display in the JEI search for the aspect until TC fixes tooltips not showing in not container GUI
 + Forced Tab icons

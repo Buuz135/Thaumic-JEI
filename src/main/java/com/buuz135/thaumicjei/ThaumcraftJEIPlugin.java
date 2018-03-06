@@ -153,6 +153,9 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
             compoundWrappers.add(new AspectCompoundCategory.AspectCompoundWrapper(aspect));
         }
         registry.addRecipes(compoundWrappers);
+
+        registry.addDescription(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "salis_mundus").toString())), "To create Salis Mundis, take 3 Vis Crystals of differing types and combine them with Redstone Dust by crafting them with a flint and a bowl.");
+        registry.addDescription(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "triple_meat_treat").toString())), "To create the Triple Meat Treat, take 3 different kinds of meat nuggets (produced by cooking meat in the Infernal Furnace) and mix them with sugar.");
     }
 
     @Override
