@@ -46,7 +46,7 @@ public class CrucibleCategory extends BlankRecipeCategory<CrucibleCategory.Cruci
 
     @Override
     public String getTitle() {
-        return "Crucible";
+        return new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "crucible").toString())).getDisplayName();
     }
 
     @Override

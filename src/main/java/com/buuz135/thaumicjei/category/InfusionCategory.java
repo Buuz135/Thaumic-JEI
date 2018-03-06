@@ -43,7 +43,7 @@ public class InfusionCategory extends BlankRecipeCategory<InfusionCategory.Infus
 
     @Override
     public String getTitle() {
-        return "Infusion crafting";
+        return "Infusion Crafting";
     }
 
     @Override

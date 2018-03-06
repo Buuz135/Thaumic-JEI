@@ -43,7 +43,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
     @Override
     public String getTitle() {
-        return "Arcane Workbench";
+        return new ItemStack(Block.getBlockFromName(new ResourceLocation("thaumcraft", "arcane_workbench").toString())).getDisplayName();
     }
 
     @Override
