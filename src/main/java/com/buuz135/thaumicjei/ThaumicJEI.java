@@ -14,7 +14,7 @@ public class ThaumicJEI {
 
     public static final String MOD_ID = "ThaumicJEI";
     public static final String MOD_NAME = "ThaumicJEI";
-    public static final String VERSION = "1.0-SNAPSHOT";
+    public static final String VERSION = "1.1.2";
     public static Logger LOGGER;
 
     /**

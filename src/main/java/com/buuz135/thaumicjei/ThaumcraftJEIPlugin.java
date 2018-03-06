@@ -22,7 +22,9 @@ import thaumcraft.client.gui.GuiArcaneWorkbench;
 import thaumcraft.common.container.ContainerArcaneWorkbench;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @JEIPlugin
 public class ThaumcraftJEIPlugin implements IModPlugin {
@@ -104,7 +106,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
             new Thread(() -> {
                 long time = System.currentTimeMillis();
                 ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
-                List<String> checkedItemStacksEmpty = new ArrayList<>();
+                Set<String> checkedItemStacksEmpty = new HashSet<>();
                 ThaumicJEI.LOGGER.info("Adding " + registry.getIngredientRegistry().getIngredients(ItemStack.class).size() + " to the aspect cache");
                 for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
                     if (!checkedItemStacksEmpty.contains(stack.getItem().getRegistryName().toString())) {
@@ -141,7 +143,6 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                 ThaumicJEI.LOGGER.info("Created recipes " + (System.currentTimeMillis() - time) + "ms");
             }).start();
         }
-
 
         AspectCompoundCategory aspectCompoundCategory = new AspectCompoundCategory(registry.getJeiHelpers().getGuiHelper());
         registry.addRecipeCategories(aspectCompoundCategory);
