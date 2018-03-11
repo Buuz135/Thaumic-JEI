@@ -11,8 +11,6 @@ import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
@@ -20,7 +18,6 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
-import thaumcraft.api.internal.CommonInternals;
 import thaumcraft.client.gui.GuiArcaneWorkbench;
 import thaumcraft.common.container.ContainerArcaneWorkbench;
 
@@ -106,36 +103,26 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
         //Aspect cache
         if (ThaumicConfig.enableAspectFromItemStacks) {
-            if (ThaumicConfig.disableThreading){
+            new Thread(() -> {
                 long time = System.currentTimeMillis();
-                for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
-                    thaumcraft.common.lib.crafting.ThaumcraftCraftingManager.generateTags(stack);
-                }
-                ThaumicJEI.LOGGER.info("Thaumcraft calculated remaining aspects in " + (System.currentTimeMillis() - time) + "ms");
                 ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
-                time = System.currentTimeMillis();
-                int isCounter = 0;
-                ThaumicJEI.LOGGER.info("Adding " + CommonInternals.objectTags.mappingCount() + " potential items to the aspect cache");        
-        
-                for(String s : CommonInternals.objectTags.keySet()){
-                    //ThaumicJEI.LOGGER.info("s = " + s);
-                    try{
-                    ItemStack stack = ItemStack.loadItemStackFromNBT((NBTTagCompound)JsonToNBT.getTagFromJson(s));
-                    isCounter++;
-                    AspectList list = CommonInternals.objectTags.get(s);                            
+                Set<String> checkedItemStacksEmpty = new HashSet<>();
+                ThaumicJEI.LOGGER.info("Adding " + registry.getIngredientRegistry().getIngredients(ItemStack.class).size() + " to the aspect cache");
+                for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
+                    if (!checkedItemStacksEmpty.contains(stack.getItem().getRegistryName().toString())) {
+                        AspectList list = new AspectList(stack);
                         if (list.size() > 0) {
                             for (Aspect aspect : list.getAspects()) {
                                 ItemStack clone = stack.copy();
                                 clone.stackSize = list.getAmount(aspect);
                                 aspectCache.put(aspect, clone);
                             }
+                        } else {
+                            checkedItemStacksEmpty.add(stack.getItem().getRegistryName().toString());
                         }
-                    }catch(Exception e){
-                        isCounter--;
                     }
                 }
-        
-                ThaumicJEI.LOGGER.info("Cached " + isCounter + " real ItemStack aspects in " + (System.currentTimeMillis() - time) + "ms");
+                ThaumicJEI.LOGGER.info("Cached ItemStack aspects in " + (System.currentTimeMillis() - time) + "ms");
                 time = System.currentTimeMillis();
                 List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
                 for (Aspect aspect : aspectCache.keySet()) {
@@ -146,69 +133,15 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                         start += 36;
                     }
                 }
+                if (runtime != null) {
+                    for (AspectFromItemStackCategory.AspectFromItemStackWrapper wrapper : wrappers) {
+                        runtime.getRecipeRegistry().addRecipe(wrapper);
+                    }
+                } else {
+                    registry.addRecipes(wrappers);
+                }
                 ThaumicJEI.LOGGER.info("Created recipes " + (System.currentTimeMillis() - time) + "ms");
-                registry.addRecipes(wrappers);
-                
-            } else {
-            //Threading
-                new Thread(() -> {
-                    long time = System.currentTimeMillis();
-                    for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
-                        thaumcraft.common.lib.crafting.ThaumcraftCraftingManager.generateTags(stack);
-                    }
-                    ThaumicJEI.LOGGER.info("Thaumcraft calculated remaining aspects in " + (System.currentTimeMillis() - time) + "ms");
-                    long waittime = (15000-(System.currentTimeMillis() - time));
-                    time = System.currentTimeMillis();
-                    if (waittime>0){
-                        try {
-                           Thread.sleep(waittime);
-                        }catch(InterruptedException e){}
-                    }
-                    ThaumicJEI.LOGGER.info("Waited for " + (System.currentTimeMillis() - time) + "ms");
-                    ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
-                    time = System.currentTimeMillis();
-                    int isCounter = 0;
-                    ThaumicJEI.LOGGER.info("Adding " + CommonInternals.objectTags.mappingCount() + " potential items to the aspect cache");        
-        
-                    for(String s : CommonInternals.objectTags.keySet()){
-                        //ThaumicJEI.LOGGER.info("s = " + s);
-                        try{
-                        ItemStack stack = ItemStack.loadItemStackFromNBT((NBTTagCompound)JsonToNBT.getTagFromJson(s));
-                        isCounter++;
-                        AspectList list = CommonInternals.objectTags.get(s);                            
-                            if (list.size() > 0) {
-                                for (Aspect aspect : list.getAspects()) {
-                                    ItemStack clone = stack.copy();
-                                    clone.stackSize = list.getAmount(aspect);
-                                    aspectCache.put(aspect, clone);
-                                }
-                            }
-                        }catch(Exception e){
-                            isCounter--;
-                        }
-                    }
-        
-                    ThaumicJEI.LOGGER.info("Cached " + isCounter + " real ItemStack aspects in " + (System.currentTimeMillis() - time) + "ms");
-                    time = System.currentTimeMillis();
-                    List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
-                    for (Aspect aspect : aspectCache.keySet()) {
-                        List<ItemStack> itemStacks = aspectCache.get(aspect);
-                        int start = 0;
-                        while (start < itemStacks.size()) {
-                            wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(aspect, itemStacks.subList(start, Math.min(start + 36, itemStacks.size()))));
-                            start += 36;
-                        }
-                    }
-                    ThaumicJEI.LOGGER.info("Created recipes " + (System.currentTimeMillis() - time) + "ms");
-                    if (runtime != null) {
-                        for (AspectFromItemStackCategory.AspectFromItemStackWrapper wrapper : wrappers) {
-                            runtime.getRecipeRegistry().addRecipe(wrapper);
-                        }
-                    } else {
-                        registry.addRecipes(wrappers);
-                    }
-                }).start();
-            }
+            }).start();
         }
 
         AspectCompoundCategory aspectCompoundCategory = new AspectCompoundCategory(registry.getJeiHelpers().getGuiHelper());
