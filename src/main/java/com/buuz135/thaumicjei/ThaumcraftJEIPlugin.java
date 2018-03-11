@@ -123,6 +123,14 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                     }
                 }
                 ThaumicJEI.LOGGER.info("Cached ItemStack aspects in " + (System.currentTimeMillis() - time) + "ms");
+                if (System.currentTimeMillis() - time < 15000){
+                    ThaumicJEI.LOGGER.info("Waiting "+(15000 - (System.currentTimeMillis() - time))+"ms as the itemstack checking was too fast.");
+                    try {
+                        Thread.sleep(15000 - (System.currentTimeMillis() - time));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 time = System.currentTimeMillis();
                 List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
                 for (Aspect aspect : aspectCache.keySet()) {
@@ -141,7 +149,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                     registry.addRecipes(wrappers);
                 }
                 ThaumicJEI.LOGGER.info("Created recipes " + (System.currentTimeMillis() - time) + "ms");
-            }).start();
+            }, "ThaumicJEI Aspect Cache").start();
         }
 
         AspectCompoundCategory aspectCompoundCategory = new AspectCompoundCategory(registry.getJeiHelpers().getGuiHelper());
