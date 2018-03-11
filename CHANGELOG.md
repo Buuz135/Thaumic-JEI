@@ -1,5 +1,5 @@
 # 1.1.3
-+ Added a small tweak to slow down aspect creation if it is two fast
++ Added a small tweak to slow down aspect creation if it is two fast.
 
 # 1.1.2
 + Made aspect checking a little bit faster (I dont think so)
