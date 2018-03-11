@@ -1,3 +1,6 @@
+# 1.1.3
++ Added a small tweak to slow down aspect creation if it is two fast
+
 # 1.1.2
 + Made aspect checking a little bit faster (I dont think so)
 + Added descriptions for TC custom recipes that aren't shown in JEI (Thanks to thePalindrome for the descriptions)
