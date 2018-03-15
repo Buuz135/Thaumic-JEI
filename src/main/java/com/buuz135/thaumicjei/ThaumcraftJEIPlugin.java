@@ -1,30 +1,49 @@
 package com.buuz135.thaumicjei;
 
+
+import com.buuz135.thaumicjei.AspectFromItemStacksHelper;
 import com.buuz135.thaumicjei.category.*;
 import com.buuz135.thaumicjei.config.ThaumicConfig;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientHelper;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
+import com.buuz135.thaumicjei.StackSizeComparator;
+import com.buuz135.thaumicjei.TCAspectCacheUtils;
+
 import com.google.common.collect.ArrayListMultimap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import thaumcraft.api.ThaumcraftApi;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
+import thaumcraft.api.internal.CommonInternals;
+import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.client.gui.GuiArcaneWorkbench;
 import thaumcraft.common.container.ContainerArcaneWorkbench;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
 
 @JEIPlugin
 public class ThaumcraftJEIPlugin implements IModPlugin {
@@ -33,7 +52,9 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
-
+        subtypeRegistry.useNbtForSubtypes(Item.getByNameOrId("thaumcraft:crystal_essence"));
+        subtypeRegistry.useNbtForSubtypes(Item.getByNameOrId("thaumcraft:phial"));
+        subtypeRegistry.useNbtForSubtypes(Item.getByNameOrId("thaumcraft:label"));
     }
 
     @Override
@@ -100,56 +121,48 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         registry.addRecipeCategories(aspectFromItemStackCategory);
         registry.addRecipeHandlers(new AspectFromItemStackCategory.AspectFromItemStackHandler());
         registry.addRecipeCategoryCraftingItem(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "thaumonomicon").toString())), aspectFromItemStackCategory.getUid());
-
-        //Aspect cache
+        ConcurrentHashMap<String,AspectList> startObjectTags = TCAspectCacheUtils.createDeepCopy(CommonInternals.objectTags);
         if (ThaumicConfig.enableAspectFromItemStacks) {
-            new Thread(() -> {
-                long time = System.currentTimeMillis();
-                ArrayListMultimap<Aspect, ItemStack> aspectCache = ArrayListMultimap.create();
-                Set<String> checkedItemStacksEmpty = new HashSet<>();
-                ThaumicJEI.LOGGER.info("Adding " + registry.getIngredientRegistry().getIngredients(ItemStack.class).size() + " to the aspect cache");
-                for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class).asList()) {
-                    if (!checkedItemStacksEmpty.contains(stack.getItem().getRegistryName().toString())) {
-                        AspectList list = new AspectList(stack);
-                        if (list.size() > 0) {
-                            for (Aspect aspect : list.getAspects()) {
-                                ItemStack clone = stack.copy();
-                                clone.stackSize = list.getAmount(aspect);
-                                aspectCache.put(aspect, clone);
+            ThaumicJEI.LOGGER.info("Start checking DiskCache");
+            long time = System.currentTimeMillis();
+            if(DiskCacheHandler.equal(startObjectTags)){
+                ThaumicJEI.LOGGER.info("Check finished in "+ (System.currentTimeMillis() - time) + "ms");
+                ThaumicJEI.LOGGER.info("DiskCache valid, loding aspects from DiskCache");
+                time = System.currentTimeMillis();
+                ThaumicJEI.LOGGER.info("Start loading DiskCache");
+                DiskCacheHandler.load();
+                ThaumicJEI.LOGGER.info("Loading finished in "+ (System.currentTimeMillis() - time) + "ms");
+                ArrayListMultimap<Aspect, ItemStack> aspectCache = AspectFromItemStacksHelper.GenerateAspectCache();
+                List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = AspectFromItemStacksHelper.GenerateWrappers(aspectCache);
+                registry.addRecipes(wrappers);
+            }else{
+                ThaumicJEI.LOGGER.info("check finished in:"+ (System.currentTimeMillis() - time) + "ms");
+                ThaumicJEI.LOGGER.info("DiskCache invalid");
+                if (ThaumicConfig.disableThreading){
+                    AspectFromItemStacksHelper.TCCalculation(registry);
+                    ArrayListMultimap<Aspect, ItemStack> aspectCache = AspectFromItemStacksHelper.GenerateAspectCache();
+                    List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = AspectFromItemStacksHelper.GenerateWrappers(aspectCache);
+                    registry.addRecipes(wrappers);
+                    DiskCacheHandler.save(startObjectTags);
+                } else {
+                    new Thread(() -> {
+                        long duration;
+                        duration=AspectFromItemStacksHelper.TCCalculation(registry);
+                        AspectFromItemStacksHelper.waitTill15000(duration);
+                        ArrayListMultimap<Aspect, ItemStack> aspectCache = AspectFromItemStacksHelper.GenerateAspectCache();
+                        List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = AspectFromItemStacksHelper.GenerateWrappers(aspectCache);
+                        if (runtime != null) {
+                            for (AspectFromItemStackCategory.AspectFromItemStackWrapper wrapper : wrappers) {
+                                runtime.getRecipeRegistry().addRecipe(wrapper);
                             }
                         } else {
-                            checkedItemStacksEmpty.add(stack.getItem().getRegistryName().toString());
+                            registry.addRecipes(wrappers);
                         }
-                    }
+                        DiskCacheHandler.save(startObjectTags);
+                    }, "ThaumicJEI Aspect Cache").start();
                 }
-                ThaumicJEI.LOGGER.info("Cached ItemStack aspects in " + (System.currentTimeMillis() - time) + "ms");
-                if (System.currentTimeMillis() - time < 15000){
-                    ThaumicJEI.LOGGER.info("Waiting "+(15000 - (System.currentTimeMillis() - time))+"ms as the itemstack checking was too fast.");
-                    try {
-                        Thread.sleep(15000 - (System.currentTimeMillis() - time));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                time = System.currentTimeMillis();
-                List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
-                for (Aspect aspect : aspectCache.keySet()) {
-                    List<ItemStack> itemStacks = aspectCache.get(aspect);
-                    int start = 0;
-                    while (start < itemStacks.size()) {
-                        wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(aspect, itemStacks.subList(start, Math.min(start + 36, itemStacks.size()))));
-                        start += 36;
-                    }
-                }
-                if (runtime != null) {
-                    for (AspectFromItemStackCategory.AspectFromItemStackWrapper wrapper : wrappers) {
-                        runtime.getRecipeRegistry().addRecipe(wrapper);
-                    }
-                } else {
-                    registry.addRecipes(wrappers);
-                }
-                ThaumicJEI.LOGGER.info("Created recipes " + (System.currentTimeMillis() - time) + "ms");
-            }, "ThaumicJEI Aspect Cache").start();
+                
+            }
         }
 
         AspectCompoundCategory aspectCompoundCategory = new AspectCompoundCategory(registry.getJeiHelpers().getGuiHelper());
