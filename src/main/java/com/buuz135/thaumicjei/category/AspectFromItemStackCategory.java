@@ -6,9 +6,7 @@ import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
-import mezz.jei.api.recipe.IRecipeHandler;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -19,7 +17,7 @@ import thaumcraft.api.aspects.Aspect;
 
 import java.util.List;
 
-public class AspectFromItemStackCategory extends BlankRecipeCategory<AspectFromItemStackCategory.AspectFromItemStackWrapper> {
+public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromItemStackCategory.AspectFromItemStackWrapper> {
 
     public static final String UUID = "THAUMCRAFT_ASPECT_FROM_ITEMSTACK";
 
@@ -31,6 +29,11 @@ public class AspectFromItemStackCategory extends BlankRecipeCategory<AspectFromI
     @Override
     public String getTitle() {
         return "Aspect from ItemStack";
+    }
+
+    @Override
+    public String getModName() {
+        return ThaumicJEI.MOD_NAME;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class AspectFromItemStackCategory extends BlankRecipeCategory<AspectFromI
         }
     }
 
-    public static class AspectFromItemStackWrapper extends BlankRecipeWrapper {
+    public static class AspectFromItemStackWrapper implements IRecipeWrapper {
 
         private final Aspect aspect;
         private final List<ItemStack> stacks;
@@ -77,31 +80,4 @@ public class AspectFromItemStackCategory extends BlankRecipeCategory<AspectFromI
         }
     }
 
-    public static class AspectFromItemStackHandler implements IRecipeHandler<AspectFromItemStackWrapper> {
-
-        @Override
-        public Class<AspectFromItemStackWrapper> getRecipeClass() {
-            return AspectFromItemStackWrapper.class;
-        }
-
-        @Override
-        public String getRecipeCategoryUid() {
-            return UUID;
-        }
-
-        @Override
-        public String getRecipeCategoryUid(AspectFromItemStackWrapper recipe) {
-            return UUID;
-        }
-
-        @Override
-        public IRecipeWrapper getRecipeWrapper(AspectFromItemStackWrapper recipe) {
-            return recipe;
-        }
-
-        @Override
-        public boolean isRecipeValid(AspectFromItemStackWrapper recipe) {
-            return true;
-        }
-    }
 }

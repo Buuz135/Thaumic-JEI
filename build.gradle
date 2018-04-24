@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
     }
 }
 
@@ -66,11 +66,10 @@ repositories {
 }
 
 dependencies {
-
-    deobfCompile "mezz.jei:jei_1.10.2:3.14.7.420:api"
+    deobfCompile "mezz.jei:jei_1.12.2:${project.jei_version}:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.10.2:3.14.7.420"
-    compile name: 'Thaumcraft-1.10.2-6.0.BETA7-deobf'
+    runtime "mezz.jei:jei_1.12.2:${project.jei_version}"
+    compile name: 'Thaumcraft-1.12.2-6.1.BETA10-deobf'
 }
 
 processResources {

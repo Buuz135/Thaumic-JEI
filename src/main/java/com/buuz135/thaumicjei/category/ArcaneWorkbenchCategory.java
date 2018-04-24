@@ -2,31 +2,35 @@ package com.buuz135.thaumicjei.category;
 
 import com.buuz135.thaumicjei.AlphaDrawable;
 import com.buuz135.thaumicjei.ItemStackDrawable;
+import com.buuz135.thaumicjei.ThaumicJEI;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
-import mezz.jei.api.recipe.IRecipeHandler;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
+import thaumcraft.api.items.ItemsTC;
+import thaumcraft.common.items.resources.ItemCrystalEssence;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbenchCategory.ArcaneWorkbenchWrapper> {
+public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchCategory.ArcaneWorkbenchWrapper> {
 
     public static final String UUID = "THAUMCRAFT_ARCANE_WORKBENCH";
 
@@ -47,8 +51,13 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
     }
 
     @Override
+    public String getModName() {
+        return ThaumicJEI.MOD_NAME;
+    }
+
+    @Override
     public IDrawable getBackground() {
-        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 0, 0);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 50, 50);
     }
 
     @Nullable
@@ -61,30 +70,25 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
     public void drawExtras(Minecraft minecraft) {
         minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
         GL11.glEnable(3042);
-        Gui.drawModalRectWithCustomSizedTexture(51 - 16, 0, 40, 6, 32, 32, 512, 512);
-        Gui.drawModalRectWithCustomSizedTexture(0 - 18, 4, 135, 152, 23, 23, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(51 - 16 + 50, 0, 40, 6, 32, 32, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(0 - 18 + 50, 4, 135, 152, 23, 23, 512, 512);
         GL11.glDisable(3042);
     }
 
     @Override
-    public void drawAnimations(Minecraft minecraft) {
-
-    }
-
-    @Override
     public void setRecipe(IRecipeLayout recipeLayout, ArcaneWorkbenchWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, false, 51 - 9, 7);
+        recipeLayout.getItemStacks().init(0, false, 51 - 9 + 50, 7);
         int sizeX = 3;
         int sizeY = 3;
         if (recipeWrapper.getRecipe() instanceof ShapedArcaneRecipe) {
-            sizeX = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).width;
-            sizeY = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).height;
+            sizeX = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).getRecipeWidth();
+            sizeY = ((ShapedArcaneRecipe) recipeWrapper.getRecipe()).getRecipeHeight();
         }
         int slot = 1;
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
                 if (ingredients.getInputs(ItemStack.class).size() >= slot) {
-                    recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30), 36 + 12 + (y) * 30);
+                    recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30) + 50, 36 + 12 + (y) * 30);
                     if (ingredients.getInputs(ItemStack.class).get(slot - 1) != null) {
                         recipeLayout.getItemStacks().set(slot, ingredients.getInputs(ItemStack.class).get(slot - 1));
                     }
@@ -93,11 +97,17 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
             }
         }
         int crystalAmount = 0;
-        for (ItemStack crystal : recipeWrapper.getRecipe().getCrystals()) {
-            recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118, 6 + 22 * crystalAmount);
-            recipeLayout.getItemStacks().set(slot + crystalAmount, crystal);
-            ++crystalAmount;
+        if (recipeWrapper.getRecipe().getCrystals() != null) {
+            for (Aspect aspect : recipeWrapper.getRecipe().getCrystals().getAspectsSortedByAmount()) {
+                ItemStack crystal = new ItemStack(ItemsTC.crystalEssence);
+                ((ItemCrystalEssence) ItemsTC.crystalEssence).setAspects(crystal, new AspectList().add(aspect, 1));
+                crystal.setCount(recipeWrapper.getRecipe().getCrystals().getAmount(aspect));
+                recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118 + 50, 6 + 22 * crystalAmount);
+                recipeLayout.getItemStacks().set(slot + crystalAmount, crystal);
+                ++crystalAmount;
+            }
         }
+
         recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
     }
 
@@ -106,35 +116,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         return Arrays.asList();
     }
 
-    public static class ArcaneWorkbenchHandler implements IRecipeHandler<ArcaneWorkbenchWrapper> {
-        @Override
-        public Class<ArcaneWorkbenchWrapper> getRecipeClass() {
-            return ArcaneWorkbenchWrapper.class;
-        }
-
-        @Override
-        public String getRecipeCategoryUid() {
-            return ArcaneWorkbenchCategory.UUID;
-        }
-
-        @Override
-        public String getRecipeCategoryUid(ArcaneWorkbenchWrapper recipe) {
-            return ArcaneWorkbenchCategory.UUID;
-        }
-
-        @Override
-        public IRecipeWrapper getRecipeWrapper(ArcaneWorkbenchWrapper recipe) {
-            return recipe;
-        }
-
-        @Override
-        public boolean isRecipeValid(ArcaneWorkbenchWrapper recipe) {
-            return true;
-        }
-    }
-
-
-    public static class ArcaneWorkbenchWrapper extends BlankRecipeWrapper implements IHasResearch {
+    public static class ArcaneWorkbenchWrapper implements IHasResearch, IRecipeWrapper {
 
         private final IArcaneRecipe recipe;
 
@@ -145,23 +127,14 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
         @Override
         public void getIngredients(IIngredients ingredients) {
             List<List<ItemStack>> lists = new ArrayList<>();
-            List<Object> input = new ArrayList<>();
+            List<Ingredient> input = new ArrayList<>();
             ItemStack output = null;
-            if (recipe instanceof ShapedArcaneRecipe) {
-                input = Arrays.asList(((ShapedArcaneRecipe) recipe).input);
-                output = ((ShapedArcaneRecipe) recipe).output;
-            } else if (recipe instanceof ShapelessArcaneRecipe) {
-                input = ((ShapelessArcaneRecipe) recipe).getInput();
+            if (recipe instanceof ShapedArcaneRecipe || recipe instanceof ShapelessArcaneRecipe) {
+                input = recipe.getIngredients();
                 output = recipe.getRecipeOutput();
             }
-            for (Object o : input) {
-                if (o == null) {
-                    lists.add(new ArrayList<>());
-                } else if (o instanceof ItemStack) {
-                    lists.add(Arrays.asList((ItemStack) o));
-                } else {
-                    lists.add((List) o);
-                }
+            for (Ingredient ingredient : input) {
+                lists.add(Arrays.asList(ingredient.getMatchingStacks()));
             }
             ingredients.setInputLists(ItemStack.class, lists);
             ingredients.setOutput(ItemStack.class, output);
@@ -169,12 +142,7 @@ public class ArcaneWorkbenchCategory extends BlankRecipeCategory<ArcaneWorkbench
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            minecraft.fontRendererObj.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 20 - minecraft.fontRendererObj.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
-        }
-
-        @Override
-        public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
-
+            minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 70 - minecraft.fontRenderer.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
         }
 
         @Nullable

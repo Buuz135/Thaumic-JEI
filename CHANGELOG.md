@@ -1,3 +1,6 @@
+# 1.2.0
++ Update to 1.12
+
 # 1.1.3
 + Added a small tweak to slow down aspect creation if it is two fast
 

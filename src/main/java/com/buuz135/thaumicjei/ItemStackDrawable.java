@@ -19,7 +19,6 @@ public class ItemStackDrawable implements IDrawableStatic {
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableDepth();
         minecraft.getRenderItem().renderItemAndEffectIntoGUI(null, stack, xOffset, yOffset);
-        GlStateManager.disableBlend();
         GlStateManager.disableDepth();
         RenderHelper.disableStandardItemLighting();
     }

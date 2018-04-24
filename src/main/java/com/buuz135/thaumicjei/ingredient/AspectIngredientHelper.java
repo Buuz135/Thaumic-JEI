@@ -49,6 +49,16 @@ public class AspectIngredientHelper implements IIngredientHelper<Aspect> {
     }
 
     @Override
+    public String getResourceId(Aspect ingredient) {
+        return ingredient.getName();
+    }
+
+    @Override
+    public Aspect copyIngredient(Aspect ingredient) {
+        return ingredient;
+    }
+
+    @Override
     public String getErrorInfo(Aspect ingredient) {
         return "";
     }
