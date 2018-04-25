@@ -1,3 +1,6 @@
+# 1.2.1
++ Removed Arcane recipes from the normal crafting category and forced latest JEI so it doesn't show an empty page
+
 # 1.2.0
 + Update to 1.12
 

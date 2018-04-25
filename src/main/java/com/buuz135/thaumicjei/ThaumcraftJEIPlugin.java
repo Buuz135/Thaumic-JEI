@@ -10,6 +10,7 @@ import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -156,7 +157,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         this.runtime = jeiRuntime;
 
-        //CraftingManager.REGISTRY.getKeys().stream().map(CraftingManager.REGISTRY::getObject).filter(iRecipe -> iRecipe instanceof IArcaneRecipe && jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING) != null).forEach(iRecipe -> jeiRuntime.getRecipeRegistry().hideRecipe(jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING)));
+        CraftingManager.REGISTRY.getKeys().stream().map(CraftingManager.REGISTRY::getObject).filter(iRecipe -> iRecipe instanceof IArcaneRecipe && jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING) != null).forEach(iRecipe -> jeiRuntime.getRecipeRegistry().hideRecipe(jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING)));
     }
 
 //    public void createAspectsFile(List<ItemStack> items){

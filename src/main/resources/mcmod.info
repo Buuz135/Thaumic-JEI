@@ -1,19 +1,17 @@
 [
   {
-    "modid": "ThaumicJEI",
+    "modid": "thaumicjei",
     "name": "ThaumicJEI",
-    "description": "",
+    "description": "A Simple JEI addon for Thaumcraft",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "url": "",
-    "updateUrl": "",
     "authorList": [
-      ""
+      "Buuz135"
     ],
-    "credits": "",
-    "logoFile": "",
     "screenshots": [],
     "dependencies": [
+      "jei",
+      "thaumcraft"
     ]
   }
 ]
