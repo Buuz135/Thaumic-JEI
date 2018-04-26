@@ -5,8 +5,8 @@ import com.buuz135.thaumicjei.category.AspectCompoundCategory;
 import com.buuz135.thaumicjei.category.CrucibleCategory;
 import com.buuz135.thaumicjei.category.InfusionCategory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
-import com.buuz135.thaumicjei.ingredient.AspectIngredientHelper;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
+import com.buuz135.thaumicjei.ingredient.AspectListIngredientHelper;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
@@ -18,6 +18,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.IThaumcraftRecipe;
@@ -46,7 +47,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registry) {
-        registry.register(Aspect.class, AspectIngredientFactory.create(), new AspectIngredientHelper(), new AspectIngredientRender());
+        registry.register(AspectList.class, AspectIngredientFactory.create(), new AspectListIngredientHelper(), new AspectIngredientRender());
     }
 
     @Override

@@ -1,3 +1,6 @@
+# 1.2.2
++ Changed Aspect Ingredient to AspectList Ingredient so the amount can be rendered on top
+
 # 1.2.1
 + Removed Arcane recipes from the normal crafting category and forced latest JEI so it doesn't show an empty page
 

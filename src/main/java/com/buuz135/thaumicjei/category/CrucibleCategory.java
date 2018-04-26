@@ -15,14 +15,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
-import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.CrucibleWrapper> {
 
@@ -71,11 +71,11 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
         recipeLayout.getItemStacks().init(1, true, 2, 2);
         recipeLayout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(0));
 
-        int center = (ingredients.getInputs(Aspect.class).size() * SPACE) / 2;
+        int center = (ingredients.getInputs(AspectList.class).size() * SPACE) / 2;
         int x = 0;
-        for (List<Aspect> aspectList : ingredients.getInputs(Aspect.class)) {
-            recipeLayout.getIngredientsGroup(Aspect.class).init(x + 1, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
-            recipeLayout.getIngredientsGroup(Aspect.class).set(x + 1, aspectList);
+        for (List<AspectList> aspectList : ingredients.getInputs(AspectList.class)) {
+            recipeLayout.getIngredientsGroup(AspectList.class).init(x + 1, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(AspectList.class).set(x + 1, aspectList);
             ++x;
         }
     }
@@ -100,22 +100,13 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
         @Override
         public void getIngredients(IIngredients ingredients) {
             ingredients.setInput(ItemStack.class, recipe.getCatalyst().getMatchingStacks()[0]);
-            ingredients.setInputs(Aspect.class, Arrays.asList(recipe.getAspects().getAspectsSortedByAmount()));
+            ingredients.setInputs(AspectList.class, Arrays.stream(recipe.getAspects().getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.getAspects().getAmount(aspect))).collect(Collectors.toList()));
             ingredients.setOutput(ItemStack.class, recipe.getRecipeOutput());
         }
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            int center = (recipe.getAspects().size() * SPACE) / 2;
-            int x = 0;
-            for (Aspect aspect : recipe.getAspects().getAspectsSortedByAmount()) {
-                minecraft.renderEngine.bindTexture(aspect.getImage());
-                GL11.glPushMatrix();
-                GL11.glScaled(0.5, 0.5, 0.5);
-                minecraft.currentScreen.drawString(minecraft.fontRenderer, TextFormatting.WHITE + "" + recipe.getAspects().getAmount(aspect), 28 + (ASPECT_X - center + x * SPACE) * 2, ASPECT_Y * 2 + 26, 0);
-                GL11.glPopMatrix();
-                ++x;
-            }
+
         }
 
         @Override

@@ -12,8 +12,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCategory.AspectCompoundWrapper> {
 
@@ -53,12 +55,12 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectCompoundWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(Aspect.class).init(0, false, new AspectIngredientRender(), 82, 0, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(Aspect.class).set(0, ingredients.getOutputs(Aspect.class).get(0));
-        recipeLayout.getIngredientsGroup(Aspect.class).init(1, true, new AspectIngredientRender(), 8, 0, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(Aspect.class).init(2, true, new AspectIngredientRender(), 46, 0, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(Aspect.class).set(1, ingredients.getInputs(Aspect.class).get(0));
-        recipeLayout.getIngredientsGroup(Aspect.class).set(2, ingredients.getInputs(Aspect.class).get(1));
+        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 82, 0, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
+        recipeLayout.getIngredientsGroup(AspectList.class).init(1, true, new AspectIngredientRender(), 8, 0, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).init(2, true, new AspectIngredientRender(), 46, 0, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).set(1, ingredients.getInputs(AspectList.class).get(0));
+        recipeLayout.getIngredientsGroup(AspectList.class).set(2, ingredients.getInputs(AspectList.class).get(1));
     }
 
 
@@ -72,8 +74,8 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setOutput(Aspect.class, aspect);
-            ingredients.setInputs(Aspect.class, Arrays.asList(aspect.getComponents()));
+            ingredients.setOutput(AspectList.class, new AspectList().add(aspect, 1));
+            ingredients.setInputs(AspectList.class, Arrays.stream(aspect.getComponents()).map(aspect1 -> new AspectList().add(aspect1, 1)).collect(Collectors.toList()));
         }
 
         @Override

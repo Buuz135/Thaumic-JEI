@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectFromItemStackWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(Aspect.class).init(0, false, new AspectIngredientRender(), 8, 8, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(Aspect.class).set(0, ingredients.getOutputs(Aspect.class).get(0));
+        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 8, 8, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
         int slot = 0;
         int row = 9;
         for (List<ItemStack> stacks : ingredients.getInputs(ItemStack.class)) {
@@ -75,7 +76,7 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setOutput(Aspect.class, aspect);
+            ingredients.setOutput(Aspect.class, new AspectList().add(aspect, 1));
             ingredients.setInputs(ItemStack.class, stacks);
         }
     }

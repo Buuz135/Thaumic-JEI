@@ -20,13 +20,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
-import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.InfusionRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InfusionCategory implements IRecipeCategory<InfusionCategory.InfusionWrapper> {
 
@@ -85,11 +86,11 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
             ++slot;
         }
 
-        int center = (ingredients.getInputs(Aspect.class).size() * SPACE) / 2;
+        int center = (ingredients.getInputs(AspectList.class).size() * SPACE) / 2;
         int x = 0;
-        for (List<Aspect> aspectList : ingredients.getInputs(Aspect.class)) {
-            recipeLayout.getIngredientsGroup(Aspect.class).init(x + slot, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
-            recipeLayout.getIngredientsGroup(Aspect.class).set(x + slot, aspectList);
+        for (List<AspectList> aspectList : ingredients.getInputs(AspectList.class)) {
+            recipeLayout.getIngredientsGroup(AspectList.class).init(x + slot, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(AspectList.class).set(x + slot, aspectList);
             ++x;
         }
     }
@@ -121,25 +122,14 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
                 inputs.add(Arrays.asList(comp.getMatchingStacks()));
             }
             ingredients.setInputLists(ItemStack.class, inputs);
-            ingredients.setInputs(Aspect.class, Arrays.asList(recipe.aspects.getAspectsSortedByAmount()));
+            ingredients.setInputs(AspectList.class, Arrays.stream(recipe.aspects.getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.aspects.getAmount(aspect))).collect(Collectors.toList()));
         }
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            int center = (recipe.aspects.size() * SPACE) / 2;
-            int x = 0;
-            for (Aspect aspect : recipe.aspects.getAspectsSortedByAmount()) {
-                minecraft.renderEngine.bindTexture(aspect.getImage());
-                GL11.glPushMatrix();
-                GL11.glScaled(0.5, 0.5, 0.5);
-                minecraft.currentScreen.drawString(minecraft.fontRenderer, TextFormatting.WHITE + "" + recipe.aspects.getAmount(aspect), 28 + (ASPECT_X - center + x * SPACE) * 2, ASPECT_Y * 2 + 26, 0);
-                GL11.glPopMatrix();
-                ++x;
-            }
             int instability = Math.min(5, recipe.instability / 2);
             String inst = new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText();
             minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + inst, -minecraft.fontRenderer.getStringWidth(String.valueOf(instability)) / 2, 165, 0);
-
         }
 
         @Override
