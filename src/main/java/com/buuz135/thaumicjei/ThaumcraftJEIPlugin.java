@@ -1,6 +1,7 @@
 package com.buuz135.thaumicjei;
 
 import com.buuz135.thaumicjei.category.*;
+import com.buuz135.thaumicjei.config.ThaumicConfig;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import com.buuz135.thaumicjei.ingredient.AspectListIngredientHelper;
@@ -97,41 +98,43 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
         registry.addRecipeCatalyst(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "thaumonomicon").toString())), aspectFromItemStackCategory.getUid());
 
-        new Thread(() -> {
-            ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
-            ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
-            createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
-            ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
-        }, "ThaumicJEI Aspect Cache").start();
+        if (ThaumicConfig.enableAspectFromItemStacks) {
+            new Thread(() -> {
+                ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
+                ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
+                createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
+                ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
+            }, "ThaumicJEI Aspect Cache").start();
 
-        File aspectFile = new File(ASPECT_PATH);
-        if (aspectFile.exists()) {
-            try {
-                long time = System.currentTimeMillis();
-                AspectCache[] aspectCaches = new Gson().fromJson(new FileReader(aspectFile), AspectCache[].class);
-                List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
-                for (AspectCache aspectCache : aspectCaches) {
-                    Aspect aspect = Aspect.getAspect(aspectCache.aspect);
-                    if (aspect == null) continue;
-                    List<ItemStack> items = aspectCache.items.stream().map(s -> {
-                        try {
-                            return JsonToNBT.getTagFromJson(s);
-                        } catch (NBTException e) {
-                            e.printStackTrace();
+            File aspectFile = new File(ASPECT_PATH);
+            if (aspectFile.exists()) {
+                try {
+                    long time = System.currentTimeMillis();
+                    AspectCache[] aspectCaches = new Gson().fromJson(new FileReader(aspectFile), AspectCache[].class);
+                    List<AspectFromItemStackCategory.AspectFromItemStackWrapper> wrappers = new ArrayList<>();
+                    for (AspectCache aspectCache : aspectCaches) {
+                        Aspect aspect = Aspect.getAspect(aspectCache.aspect);
+                        if (aspect == null) continue;
+                        List<ItemStack> items = aspectCache.items.stream().map(s -> {
+                            try {
+                                return JsonToNBT.getTagFromJson(s);
+                            } catch (NBTException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }).filter(Objects::nonNull).map(compound -> new ItemStack(compound)).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
+                        ;
+                        int start = 0;
+                        while (start < items.size()) {
+                            wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(new AspectList().add(aspect, 1), items.subList(start, Math.min(start + 36, items.size()))));
+                            start += 36;
                         }
-                        return null;
-                    }).filter(Objects::nonNull).map(compound -> new ItemStack(compound)).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
-                    ;
-                    int start = 0;
-                    while (start < items.size()) {
-                        wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(new AspectList().add(aspect, 1), items.subList(start, Math.min(start + 36, items.size()))));
-                        start += 36;
                     }
+                    registry.addRecipes(wrappers, aspectFromItemStackCategory.getUid());
+                    ThaumicJEI.LOGGER.info("Parsed aspect file in " + (System.currentTimeMillis() - time) + "ms");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                registry.addRecipes(wrappers, aspectFromItemStackCategory.getUid());
-                ThaumicJEI.LOGGER.info("Parsed aspect file in " + (System.currentTimeMillis() - time) + "ms");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
         }
 
