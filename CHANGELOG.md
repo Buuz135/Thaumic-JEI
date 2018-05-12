@@ -1,3 +1,6 @@
+# 1.2.4
++ Sorted JEI tabs in a more logical way
+
 # 1.2.3
 + Readded Aspect from Itemstack, on the first run a file will generate in the config folder that contains all the information for it (You can check the logs to see when is done generating). On the second run the aspects will show in JEI properly and the file will update again. The file is created in another thread so it won't slow down the game start.
 + Made the mod clientside only
