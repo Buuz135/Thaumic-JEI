@@ -69,7 +69,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:${project.jei_version}:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.12.2:${project.jei_version}"
-    compile name: 'Thaumcraft-1.12.2-6.1.BETA10-deobf'
+    compile name: 'Thaumcraft-1.12.2-6.1.BETA13-deobf'
 }
 
 processResources {

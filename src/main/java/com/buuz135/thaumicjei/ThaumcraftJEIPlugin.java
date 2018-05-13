@@ -2,6 +2,7 @@ package com.buuz135.thaumicjei;
 
 import com.buuz135.thaumicjei.category.*;
 import com.buuz135.thaumicjei.config.ThaumicConfig;
+import com.buuz135.thaumicjei.gui.ResearchTableAdvancedGuiHandler;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import com.buuz135.thaumicjei.ingredient.AspectListIngredientHelper;
@@ -148,6 +149,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         registry.addIngredientInfo(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "salis_mundus").toString())), ItemStack.class, "To create Salis Mundis, take 3 Vis Crystals of different types and combine them with Redstone Dust by crafting them with a flint and a bowl.");
         registry.addIngredientInfo(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "triple_meat_treat").toString())), ItemStack.class, "To create the Triple Meat Treat, take 3 different kinds of meat nuggets (produced by cooking meat in the Infernal Furnace) and mix them with sugar.");
 
+        registry.addAdvancedGuiHandlers(new ResearchTableAdvancedGuiHandler());
     }
 
     @Override
