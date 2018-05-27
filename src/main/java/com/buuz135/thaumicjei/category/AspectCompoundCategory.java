@@ -9,6 +9,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
@@ -34,7 +35,7 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
     @Override
     public String getTitle() {
-        return "Aspect compound";
+        return I18n.format("thaumicjei.category.aspect_compound.title");
     }
 
     @Override

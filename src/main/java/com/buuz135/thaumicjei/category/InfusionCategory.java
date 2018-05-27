@@ -12,6 +12,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTBase;
@@ -43,7 +44,7 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
 
     @Override
     public String getTitle() {
-        return "Infusion Crafting";
+        return I18n.format("thaumicjei.category.infusion.title");
     }
 
     @Override

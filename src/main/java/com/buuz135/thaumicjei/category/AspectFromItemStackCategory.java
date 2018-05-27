@@ -10,6 +10,7 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -28,7 +29,7 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
     @Override
     public String getTitle() {
-        return "Aspect from ItemStack";
+        return I18n.format("thaumicjei.category.aspect_from_itemstack.title");
     }
 
     @Override
