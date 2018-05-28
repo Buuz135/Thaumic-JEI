@@ -1,3 +1,6 @@
+# 1.3.0
++ Updated forge and TC
+
 # 1.2.4
 + Sorted JEI tabs in a more logical way
 + JEI will now move away in some areas of the Research Table that are outside of the gui
