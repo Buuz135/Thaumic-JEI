@@ -160,6 +160,10 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
     }
 
     public void createAspectsFile(Collection<ItemStack> items) {
+        List<String> blacklist = Arrays.asList(ThaumicConfig.blacklistedFromAspectChecking);
+        int prevAmount = items.size();
+        items.removeIf(stack -> blacklist.contains(stack.getItem().getRegistryName().toString()));
+        ThaumicJEI.LOGGER.info("Removed " + (prevAmount - items.size()) + " items that are blacklisted");
         int cachedAmount = 0;
         long lastTimeChecked = System.currentTimeMillis();
         HashMap<Aspect, AspectCache> aspectCacheHashMap = Maps.newHashMap();

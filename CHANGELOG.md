@@ -1,5 +1,7 @@
 # 1.3.0
 + Updated forge and TC
++ Added a blacklist in the config to remove items from the Aspect From Itemstack checking
++ All tabs should be localized (TartaricAcid)
 
 # 1.2.4
 + Sorted JEI tabs in a more logical way
