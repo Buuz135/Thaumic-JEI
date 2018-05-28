@@ -1,6 +1,7 @@
 # 1.3.0
 + Updated forge and TC
 + Added a blacklist in the config to remove items from the Aspect From Itemstack checking
++ Aspects in the items tooltips now render in all GUI (Can be disabled in the gui)
 + All tabs should be localized (TartaricAcid)
 
 # 1.2.4
