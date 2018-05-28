@@ -2,6 +2,7 @@
 + Updated forge and TC
 + Added a blacklist in the config to remove items from the Aspect From Itemstack checking
 + Aspects in the items tooltips now render in all GUI (Can be disabled in the gui)
++ Added a config option to disable the Aspect From ItemStack cache running every time you run the game. If its disabled it will only run if the file is missing. 
 + All tabs should be localized (TartaricAcid)
 
 # 1.2.4

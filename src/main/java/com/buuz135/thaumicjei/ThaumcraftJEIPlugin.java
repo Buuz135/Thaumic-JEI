@@ -100,14 +100,15 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "thaumonomicon").toString())), aspectFromItemStackCategory.getUid());
 
         if (ThaumicConfig.enableAspectFromItemStacks) {
-            new Thread(() -> {
-                ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
-                ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
-                createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
-                ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
-            }, "ThaumicJEI Aspect Cache").start();
-
             File aspectFile = new File(ASPECT_PATH);
+            if (!aspectFile.exists() || ThaumicConfig.alwaysRecreateAspectFromItemStackFile) {
+                new Thread(() -> {
+                    ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
+                    ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
+                    createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
+                    ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
+                }, "ThaumicJEI Aspect Cache").start();
+            }
             if (aspectFile.exists()) {
                 try {
                     long time = System.currentTimeMillis();
