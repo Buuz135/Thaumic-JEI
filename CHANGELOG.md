@@ -1,5 +1,6 @@
 # 1.3.1
 + Added a check for items that dont have aspects to dont render in the tooltip
++ JEI now moves away in the Foci manipulator
 
 # 1.3.0
 + Updated forge and TC

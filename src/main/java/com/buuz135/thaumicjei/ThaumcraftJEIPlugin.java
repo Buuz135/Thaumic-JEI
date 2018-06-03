@@ -2,6 +2,7 @@ package com.buuz135.thaumicjei;
 
 import com.buuz135.thaumicjei.category.*;
 import com.buuz135.thaumicjei.config.ThaumicConfig;
+import com.buuz135.thaumicjei.gui.FocalManipulatorAdvancedGuiHandler;
 import com.buuz135.thaumicjei.gui.ResearchTableAdvancedGuiHandler;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientFactory;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
@@ -151,6 +152,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         registry.addIngredientInfo(new ItemStack(Item.getByNameOrId(new ResourceLocation("thaumcraft", "triple_meat_treat").toString())), ItemStack.class, "To create the Triple Meat Treat, take 3 different kinds of meat nuggets (produced by cooking meat in the Infernal Furnace) and mix them with sugar.");
 
         registry.addAdvancedGuiHandlers(new ResearchTableAdvancedGuiHandler());
+        registry.addAdvancedGuiHandlers(new FocalManipulatorAdvancedGuiHandler());
     }
 
     @Override
