@@ -1,3 +1,6 @@
+# 1.3.1
++ Added a check for items that dont have aspects to dont render in the tooltip
+
 # 1.3.0
 + Updated forge and TC
 + Added a blacklist in the config to remove items from the Aspect From Itemstack checking

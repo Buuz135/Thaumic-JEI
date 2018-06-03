@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Mouse;
@@ -28,13 +29,14 @@ import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
 @Mod.EventBusSubscriber(modid = ThaumicJEI.MOD_ID, value = Side.CLIENT)
 public class AspectTooltipHandler {
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void tooltipEvent(ItemTooltipEvent event) {
         if (!ThaumicConfig.forceAspectTooltipInAllGUI) return;
         Minecraft mc = FMLClientHandler.instance().getClient();
         GuiScreen gui = mc.currentScreen;
         if (!(gui instanceof GuiContainer) && GuiScreen.isShiftKeyDown() != ModConfig.CONFIG_GRAPHICS.showTags) {
             AspectList tags = ThaumcraftCraftingManager.getObjectTags(event.getItemStack());
+            if (tags == null) return;
             int index = 0;
             if (tags.size() > 0) {
                 Aspect[] var5 = tags.getAspects();
@@ -58,7 +60,7 @@ public class AspectTooltipHandler {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void tooltipEvent(RenderTooltipEvent.PostBackground event) {
         if (!ThaumicConfig.forceAspectTooltipInAllGUI) return;
         Minecraft mc = FMLClientHandler.instance().getClient();
