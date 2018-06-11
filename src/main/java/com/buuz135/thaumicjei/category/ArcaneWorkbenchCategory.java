@@ -57,7 +57,7 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
 
     @Override
     public IDrawable getBackground() {
-        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 50, 50);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 225, 31, 102, 102, 36, 0, 30, 30);
     }
 
     @Nullable
@@ -70,14 +70,17 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
     public void drawExtras(Minecraft minecraft) {
         minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
         GL11.glEnable(3042);
-        Gui.drawModalRectWithCustomSizedTexture(51 - 16 + 50, 0, 40, 6, 32, 32, 512, 512);
-        Gui.drawModalRectWithCustomSizedTexture(0 - 18 + 50, 4, 135, 152, 23, 23, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(51 - 16 + 30, 0, 40, 6, 32, 32, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(0 - 18 + 30, 4, 135, 152, 23, 23, 512, 512);
         GL11.glDisable(3042);
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, ArcaneWorkbenchWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, false, 51 - 9 + 50, 7);
+        if (recipeWrapper.getRecipe() instanceof ShapelessArcaneRecipe) {
+            recipeLayout.setShapeless();
+        }
+        recipeLayout.getItemStacks().init(0, false, 51 - 9 + 30, 7);
         int sizeX = 3;
         int sizeY = 3;
         if (recipeWrapper.getRecipe() instanceof ShapedArcaneRecipe) {
@@ -88,7 +91,7 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
                 if (ingredients.getInputs(ItemStack.class).size() >= slot) {
-                    recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30) + 50, 36 + 12 + (y) * 30);
+                    recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30) + 30, 36 + 12 + (y) * 30);
                     if (ingredients.getInputs(ItemStack.class).get(slot - 1) != null) {
                         recipeLayout.getItemStacks().set(slot, ingredients.getInputs(ItemStack.class).get(slot - 1));
                     }
@@ -102,7 +105,7 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
                 ItemStack crystal = new ItemStack(ItemsTC.crystalEssence);
                 ((ItemCrystalEssence) ItemsTC.crystalEssence).setAspects(crystal, new AspectList().add(aspect, 1));
                 crystal.setCount(recipeWrapper.getRecipe().getCrystals().getAmount(aspect));
-                recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118 + 50, 6 + 22 * crystalAmount);
+                recipeLayout.getItemStacks().init(slot + crystalAmount, false, 118 + 23, 6 + 22 * crystalAmount);
                 recipeLayout.getItemStacks().set(slot + crystalAmount, crystal);
                 ++crystalAmount;
             }
@@ -142,7 +145,7 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 70 - minecraft.fontRenderer.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
+            minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 50 - minecraft.fontRenderer.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
         }
 
         @Nullable

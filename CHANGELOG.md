@@ -1,3 +1,7 @@
+# 1.4.0
++ Updated to latest jei
++ Improved Arcane workbench category
+
 # 1.3.1
 + Added a check for items that dont have aspects to dont render in the tooltip
 + JEI now moves away in the Foci manipulator

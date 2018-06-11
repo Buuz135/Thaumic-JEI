@@ -126,7 +126,6 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                             }
                             return null;
                         }).filter(Objects::nonNull).map(compound -> new ItemStack(compound)).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
-                        ;
                         int start = 0;
                         while (start < items.size()) {
                             wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(new AspectList().add(aspect, 1), items.subList(start, Math.min(start + 36, items.size()))));
