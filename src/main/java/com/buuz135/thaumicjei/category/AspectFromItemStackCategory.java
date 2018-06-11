@@ -39,25 +39,25 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
     @Override
     public IDrawable getBackground() {
-        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 40, 6, 32, 32, 0, 18 * 4, 81, 81);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 40, 6, 32, 32, 0, 18 * 4 + 5, 72, 72);
     }
 
     @Override
     public void drawExtras(Minecraft minecraft) {
         minecraft.renderEngine.bindTexture(new ResourceLocation(ThaumicJEI.MOD_ID, "textures/gui/gui.png"));
         GL11.glEnable(3042);
-        Gui.drawModalRectWithCustomSizedTexture(-66 + 81, 31, 0, 0, 163, 74, 256, 256);
+        Gui.drawModalRectWithCustomSizedTexture(-66 + 81 - 9, 31, 0, 0, 163, 74, 256, 256);
         GL11.glDisable(3042);
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectFromItemStackWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 8 + 81, 8, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 8 + 81 - 9, 8, 16, 16, 0, 0);
         recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
         int slot = 0;
         int row = 9;
         for (List<ItemStack> stacks : ingredients.getInputs(ItemStack.class)) {
-            recipeLayout.getItemStacks().init(slot + 1, true, (slot % row) * 18 - 18 * 3 - 12 + 81, (slot / row) * 18 + 32);
+            recipeLayout.getItemStacks().init(slot + 1, true, (slot % row) * 18 - 18 * 3 - 21 + 81, (slot / row) * 18 + 32);
             recipeLayout.getItemStacks().set(slot + 1, stacks);
             ++slot;
         }
