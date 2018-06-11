@@ -49,7 +49,8 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
-
+        subtypeRegistry.useNbtForSubtypes(Item.getByNameOrId("thaumcraft:crystal_essence"));
+        subtypeRegistry.useNbtForSubtypes(Item.getByNameOrId("thaumcraft:phial"));
     }
 
     @Override

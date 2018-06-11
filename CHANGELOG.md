@@ -4,6 +4,7 @@
 + Improved Infusion category
 + Improved Aspect compound category
 + Improved Aspect from itemstack category
++ Added better checking for recipes for vis crystals and phials
 
 # 1.3.1
 + Added a check for items that dont have aspects to dont render in the tooltip

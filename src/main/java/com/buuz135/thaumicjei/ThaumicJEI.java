@@ -29,6 +29,4 @@ public class ThaumicJEI {
         LOGGER = event.getModLog();
     }
 
-    //TODO Fix gui screen
-    //TODO register subtypes for vis crystals and phials
 }
