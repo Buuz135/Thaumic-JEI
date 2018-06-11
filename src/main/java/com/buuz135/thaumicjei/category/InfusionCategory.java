@@ -54,14 +54,14 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
 
     @Override
     public IDrawable getBackground() {
-        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 413, 154, 86, 86, 40, 40, 0, 0);
+        return new AlphaDrawable(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"), 413, 154, 86, 86, 40, 44, 30, 30);
     }
 
     @Override
     public void drawExtras(Minecraft minecraft) {
         minecraft.renderEngine.bindTexture(new ResourceLocation("thaumcraft", "textures/gui/gui_researchbook_overlay.png"));
         GL11.glEnable(3042);
-        Gui.drawModalRectWithCustomSizedTexture(27, -7, 40, 6, 32, 32, 512, 512);
+        Gui.drawModalRectWithCustomSizedTexture(27 + 30, 0, 40, 6, 32, 32, 512, 512);
         GL11.glDisable(3042);
     }
 
@@ -74,23 +74,22 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, InfusionWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, false, 34, 0);
+        recipeLayout.getItemStacks().init(0, false, 34 + 30, 7);
         recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
         int slot = 1;
         float currentRotation = -90.0F;
         for (List<ItemStack> stacks : ingredients.getInputs(ItemStack.class)) {
-            if (slot == 1) recipeLayout.getItemStacks().init(slot, true, 34, 75);
+            if (slot == 1) recipeLayout.getItemStacks().init(slot, true, 34 + 30, 75);
             else
-                recipeLayout.getItemStacks().init(slot, true, (int) (MathHelper.cos((float) (currentRotation / 180.0F * Math.PI)) * 40.0F) + 34, (int) (MathHelper.sin(currentRotation / 180.0F * 3.1415927F) * 40.0F) + 75);
+                recipeLayout.getItemStacks().init(slot, true, 30 + (int) (MathHelper.cos((float) (currentRotation / 180.0F * Math.PI)) * 40.0F) + 34, (int) (MathHelper.sin(currentRotation / 180.0F * 3.1415927F) * 40.0F) + 75);
             recipeLayout.getItemStacks().set(slot, stacks);
             currentRotation += (360f / recipeWrapper.recipe.getComponents().size());
             ++slot;
         }
-
         int center = (ingredients.getInputs(AspectList.class).size() * SPACE) / 2;
         int x = 0;
         for (List<AspectList> aspectList : ingredients.getInputs(AspectList.class)) {
-            recipeLayout.getIngredientsGroup(AspectList.class).init(x + slot, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(AspectList.class).init(x + slot, true, new AspectIngredientRender(), 30 + ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
             recipeLayout.getIngredientsGroup(AspectList.class).set(x + slot, aspectList);
             ++x;
         }
@@ -129,8 +128,8 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             int instability = Math.min(5, recipe.instability / 2);
-            String inst = new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText();
-            minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + inst, -minecraft.fontRenderer.getStringWidth(String.valueOf(instability)) / 2, 165, 0);
+            String inst = TextFormatting.DARK_GRAY + new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText();
+            minecraft.fontRenderer.drawString(inst, (recipeWidth / 2) - (minecraft.fontRenderer.getStringWidth(inst) / 2), 158, 0);
         }
 
         @Override

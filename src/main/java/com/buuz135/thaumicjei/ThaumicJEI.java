@@ -29,7 +29,6 @@ public class ThaumicJEI {
         LOGGER = event.getModLog();
     }
 
-    //TODO Show a shapeless icon in the recipes that are shapeless
     //TODO Fix gui screen
     //TODO register subtypes for vis crystals and phials
 }
