@@ -50,16 +50,16 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + "+", 32, 4, 0);
-        minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + "=", 68, 4, 0);
+        minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + "+", 32, 6, 0);
+        minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + "=", 68, 6, 0);
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectCompoundWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 82, 0, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 82, 2, 16, 16, 0, 0);
         recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
-        recipeLayout.getIngredientsGroup(AspectList.class).init(1, true, new AspectIngredientRender(), 8, 0, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(AspectList.class).init(2, true, new AspectIngredientRender(), 46, 0, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).init(1, true, new AspectIngredientRender(), 8, 2, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(AspectList.class).init(2, true, new AspectIngredientRender(), 46, 2, 16, 16, 0, 0);
         recipeLayout.getIngredientsGroup(AspectList.class).set(1, ingredients.getInputs(AspectList.class).get(0));
         recipeLayout.getIngredientsGroup(AspectList.class).set(2, ingredients.getInputs(AspectList.class).get(1));
     }
@@ -85,11 +85,11 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
             GL11.glEnable(3042);
             GL11.glScaled(0.5, 0.5, 0.5);
             String name = TextFormatting.DARK_GRAY + "" + aspect.getName();
-            minecraft.fontRenderer.drawString(name, 181 - minecraft.fontRenderer.getStringWidth(name) / 2, 34, 0);
+            minecraft.fontRenderer.drawString(name, 181 - minecraft.fontRenderer.getStringWidth(name) / 2, 36, 0);
             name = TextFormatting.DARK_GRAY + "" + aspect.getComponents()[0].getName();
-            minecraft.fontRenderer.drawString(name, 32 - minecraft.fontRenderer.getStringWidth(name) / 2, 34, 0);
+            minecraft.fontRenderer.drawString(name, 32 - minecraft.fontRenderer.getStringWidth(name) / 2, 36, 0);
             name = TextFormatting.DARK_GRAY + "" + aspect.getComponents()[1].getName();
-            minecraft.fontRenderer.drawString(name, 109 - minecraft.fontRenderer.getStringWidth(name) / 2, 34, 0);
+            minecraft.fontRenderer.drawString(name, 109 - minecraft.fontRenderer.getStringWidth(name) / 2, 36, 0);
             GL11.glDisable(3042);
             GL11.glPopMatrix();
         }

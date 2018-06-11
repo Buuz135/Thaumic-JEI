@@ -2,6 +2,7 @@
 + Updated to latest jei
 + Improved Arcane workbench category
 + Improved Infusion category
++ Improved Aspect compound category
 
 # 1.3.1
 + Added a check for items that dont have aspects to dont render in the tooltip
