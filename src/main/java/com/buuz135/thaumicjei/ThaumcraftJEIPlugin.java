@@ -34,6 +34,7 @@ import com.google.gson.GsonBuilder;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -66,7 +67,8 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
     public static InfusionCategory infusionCategory;
     public static AspectFromItemStackCategory aspectFromItemStackCategory;
     public static AspectCompoundCategory aspectCompoundCategory;
-    private IJeiRuntime runtime;
+    public static IJeiRuntime runtime;
+    public static HashMap<IRecipeWrapper, String> recipes = new HashMap<>();
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -178,9 +180,18 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        this.runtime = jeiRuntime;
+        runtime = jeiRuntime;
 
         CraftingManager.REGISTRY.getKeys().stream().map(CraftingManager.REGISTRY::getObject).filter(iRecipe -> iRecipe instanceof IArcaneRecipe && jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING) != null).forEach(iRecipe -> jeiRuntime.getRecipeRegistry().hideRecipe(jeiRuntime.getRecipeRegistry().getRecipeWrapper(iRecipe, VanillaRecipeCategoryUid.CRAFTING)));
+
+        recipes.clear();
+        for (String uuid : new String[]{arcaneWorkbenchCategory.getUid(), crucibleCategory.getUid(), infusionCategory.getUid()}) {
+            jeiRuntime.getRecipeRegistry().getRecipeWrappers(jeiRuntime.getRecipeRegistry().getRecipeCategory(uuid)).forEach(o -> {
+                recipes.put((IRecipeWrapper) o, uuid);
+                if (ThaumicConfig.hideRecipesIfMissingResearch)
+                    jeiRuntime.getRecipeRegistry().hideRecipe((IRecipeWrapper) o, uuid);
+            });
+        }
     }
 
     public void createAspectsFile(Collection<ItemStack> items) {

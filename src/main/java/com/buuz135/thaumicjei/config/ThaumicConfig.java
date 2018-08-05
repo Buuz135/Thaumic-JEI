@@ -39,11 +39,14 @@ public class ThaumicConfig {
     @Config.Comment("Items blacklisted from the checking in the Aspect For ItemStack. Format: 'minecraft:stone'")
     public static String[] blacklistedFromAspectChecking = new String[]{};
 
-    @Config.Comment("If true the Aspect from ItemStack json will be created always on startup, if false if will be only be created if it doesn't exist and ")
+    @Config.Comment("If true the Aspect from ItemStack json will be created always on startup, if false if will be only be created if it doesn't exist")
     public static boolean alwaysRecreateAspectFromItemStackFile = true;
 
     @Config.Comment("Allow to render the ItemStacks aspects in all GUI")
     public static boolean forceAspectTooltipInAllGUI = true;
+
+    @Config.Comment("Hide recipes from JEI if you don't have the research for it")
+    public static boolean hideRecipesIfMissingResearch = true;
 
     @Mod.EventBusSubscriber(modid = ThaumicJEI.MOD_ID)
     private static class EventHandler {
