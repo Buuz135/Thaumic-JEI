@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
         maven {
             name = "forge"
             url = "https://files.minecraftforge.net/maven"
@@ -17,7 +16,7 @@ plugins {
     id "com.github.hierynomus.license" version "0.14.0"
     id "com.matthewprenger.cursegradle" version "1.0.10"
 }
-apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.selesse.git.changelog'
 apply plugin: 'java'
 
@@ -114,7 +113,7 @@ changelog {
     title = "Thaumic JEI"
     fileName = "CHANGELOG.md"
     outputDirectory = file("$projectDir")
-    since = 'last_tag'
+    since = '1.4.0'
     commitFormat = '%s (%an)'
     markdown {
         commitFormat = '* %s (%an)'
