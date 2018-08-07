@@ -70,9 +70,18 @@ public class ResearchManager {
         }
         if (Minecraft.getMinecraft().player.hasCapability(ThaumcraftCapabilities.KNOWLEDGE, null)) {
             for (String uuid : new String[]{ThaumcraftJEIPlugin.arcaneWorkbenchCategory.getUid(), ThaumcraftJEIPlugin.crucibleCategory.getUid(), ThaumcraftJEIPlugin.infusionCategory.getUid()}) {
-                ThaumcraftJEIPlugin.runtime.getRecipeRegistry().getRecipeWrappers(ThaumcraftJEIPlugin.runtime.getRecipeRegistry().getRecipeCategory(uuid)).forEach(o -> ThaumcraftJEIPlugin.runtime.getRecipeRegistry().hideRecipe((IRecipeWrapper) o, uuid));
+                if (ThaumcraftJEIPlugin.runtime.getRecipeRegistry().getRecipeCategory(uuid) != null) {
+                    for (Object o : ThaumcraftJEIPlugin.runtime.getRecipeRegistry().getRecipeWrappers(ThaumcraftJEIPlugin.runtime.getRecipeRegistry().getRecipeCategory(uuid))) {
+                        if (o != null)
+                            ThaumcraftJEIPlugin.runtime.getRecipeRegistry().hideRecipe((IRecipeWrapper) o, uuid);
+                    }
+                }
             }
             IPlayerKnowledge knowledge = Minecraft.getMinecraft().player.getCapability(ThaumcraftCapabilities.KNOWLEDGE, null);
+            if (knowledge == null) {
+                timeToSync = 100;
+                return;
+            }
             for (IRecipeWrapper recipeWrapper : ThaumcraftJEIPlugin.recipes.keySet()) {
                 if (recipeWrapper instanceof IHasResearch) {
                     boolean hasAll = true;
