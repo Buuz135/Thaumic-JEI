@@ -27,7 +27,6 @@ import com.buuz135.thaumicjei.util.AspectUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -60,22 +59,17 @@ public class AspectTooltipHandler {
             if (tags == null) return;
             int index = 0;
             if (tags.size() > 0) {
-                Aspect[] var5 = tags.getAspects();
-                int var6 = var5.length;
-                for (int var7 = 0; var7 < var6; ++var7) {
-                    Aspect tag = var5[var7];
-                    if (tag != null) {
-                        ++index;
-                    }
+                for (Aspect aspect : tags.getAspects()) {
+                    if (aspect != null) ++index;
                 }
             }
             int width = index * 18;
             if (width > 0) {
-                double sw = (double) mc.fontRenderer.getStringWidth(" ");
-                int t = MathHelper.ceil((double) width / sw);
-                int l = MathHelper.ceil(18.0D / (double) mc.fontRenderer.FONT_HEIGHT);
-                for (int a = 0; a < l; ++a) {
-                    event.getToolTip().add("                                                                                                                                            ".substring(0, Math.min(120, t)));
+                double spaceWidth = (double) mc.fontRenderer.getStringWidth(" ");
+                int spaceAmount = MathHelper.ceil((double) width / spaceWidth);
+                int heightAmount = MathHelper.ceil(18.0D / (double) mc.fontRenderer.FONT_HEIGHT);
+                for (int a = 0; a < heightAmount; ++a) {
+                    event.getToolTip().add("                                                                                                                                            ".substring(0, Math.min(120, spaceAmount)));
                 }
             }
         }
@@ -93,7 +87,7 @@ public class AspectTooltipHandler {
                     if (event.getLines().get(a) != null && !((String) event.getLines().get(a)).contains("    ")) {
                         bot -= 10;
                     } else if (a > 0 && event.getLines().get(a - 1) != null && ((String) event.getLines().get(a - 1)).contains("    ")) {
-                        renderAspectsInGui(gui, mc.player, event.getStack(), bot, event.getX(), event.getY());
+                        renderAspectsInGui(event.getStack(), bot, event.getX(), event.getY());
                         break;
                     }
                 }
@@ -101,25 +95,16 @@ public class AspectTooltipHandler {
         }
     }
 
-    public static void renderAspectsInGui(GuiScreen screen, EntityPlayer player, ItemStack stack, int sd, int sx, int sy) {
+    public static void renderAspectsInGui(ItemStack stack, int botY, int posX, int posY) {
         AspectList tags = ThaumcraftCraftingManager.getObjectTags(stack);
         if (tags != null) {
             GL11.glPushMatrix();
-            int x = 0;
-            int y = 0;
-            int index = 0;
+            int pos = 0;
             if (tags.size() > 0) {
-                Aspect[] var11 = tags.getAspectsSortedByAmount();
-                int var12 = var11.length;
-
-                for (int var13 = 0; var13 < var12; ++var13) {
-                    Aspect tag = var11[var13];
-                    if (tag != null) {
-                        x = sx + index * 18;
-                        y = sy + sd - 16;
-                        AspectUtils.renderAspectList(new AspectList().add(tag, tags.getAmount(tag)), x, y, Minecraft.getMinecraft());
-                        ++index;
-                    }
+                Aspect[] sortedTags = tags.getAspectsSortedByAmount();
+                for (Aspect sortedTag : sortedTags) {
+                    AspectUtils.renderAspectList(new AspectList().add(sortedTag, tags.getAmount(sortedTag)), posX + pos * 19, posY + botY - 16, Minecraft.getMinecraft());
+                    ++pos;
                 }
             }
             GL11.glPopMatrix();
