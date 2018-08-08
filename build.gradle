@@ -67,8 +67,9 @@ repositories {
         name = "ModMaven"
         url = "modmaven.k-4u.nl"
     }
-    flatDir {
-        dirs 'libs'
+    maven {
+        name 'Curseforge Maven' // Thaumcraft
+        url 'http://minecraft.curseforge.com/api/maven/'
     }
 }
 
@@ -76,7 +77,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:${project.jei_version}:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.12.2:${project.jei_version}"
-    compile name: 'Thaumcraft-1.12.2-6.1.BETA20-deobf'
+    deobfCompile "thaumcraft:Thaumcraft:${project.minecraftVersion}:${project.thaumcraft}"
 }
 
 processResources {
