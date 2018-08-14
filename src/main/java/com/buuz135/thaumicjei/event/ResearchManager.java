@@ -64,7 +64,7 @@ public class ResearchManager {
 
     private static void sync(String current) {
         if (!ThaumicConfig.hideRecipesIfMissingResearch) return;
-        if (Minecraft.getMinecraft().player == null) {
+        if (Minecraft.getMinecraft().player == null || ThaumcraftJEIPlugin.runtime == null) {
             timeToSync = 20;
             return;
         }
