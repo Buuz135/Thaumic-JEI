@@ -142,5 +142,12 @@ curseforge {
         changelog = file('CHANGELOG.md')
         changelogType = 'markdown'
         releaseType = 'beta'
+
+        mainArtifact(jar){
+            relations {
+                requiredLibrary 'thaumcraft'
+                requiredLibrary 'jei'
+            }
+        }
     }
 }
