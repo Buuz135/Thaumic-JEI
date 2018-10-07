@@ -21,9 +21,9 @@
  */
 package com.buuz135.thaumicjei.category;
 
-import com.buuz135.thaumicjei.AlphaDrawable;
-import com.buuz135.thaumicjei.ItemStackDrawable;
 import com.buuz135.thaumicjei.ThaumicJEI;
+import com.buuz135.thaumicjei.drawable.AlphaDrawable;
+import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -129,13 +129,14 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
             List<List<ItemStack>> inputs = new ArrayList<>();
             inputs.add(Arrays.asList(recipe.getRecipeInput().getMatchingStacks()));
             if (recipe.recipeOutput instanceof ItemStack) {
-                ingredients.setOutput(ItemStack.class, recipe.recipeOutput);
+                ingredients.setOutput(ItemStack.class, ((ItemStack) recipe.recipeOutput).copy());
             } else if (recipe.recipeOutput != null) {
                 for (ItemStack stack : inputs.get(0)) {
                     if (stack != null) {
                         Object[] objects = (Object[]) recipe.recipeOutput;
-                        stack.setTagInfo((String) objects[0], (NBTBase) objects[1]);
-                        ingredients.setOutput(ItemStack.class, stack);
+                        ItemStack copied = stack.copy();
+                        copied.setTagInfo((String) objects[0], (NBTBase) objects[1]);
+                        ingredients.setOutput(ItemStack.class, copied);
                     }
                 }
             }
