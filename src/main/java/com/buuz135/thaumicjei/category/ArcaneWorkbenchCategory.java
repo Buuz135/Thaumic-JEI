@@ -21,9 +21,9 @@
  */
 package com.buuz135.thaumicjei.category;
 
-import com.buuz135.thaumicjei.AlphaDrawable;
-import com.buuz135.thaumicjei.ItemStackDrawable;
 import com.buuz135.thaumicjei.ThaumicJEI;
+import com.buuz135.thaumicjei.drawable.AlphaDrawable;
+import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;

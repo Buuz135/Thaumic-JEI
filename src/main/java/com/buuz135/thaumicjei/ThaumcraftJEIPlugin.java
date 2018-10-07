@@ -103,19 +103,14 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
         List<CrucibleCategory.CrucibleWrapper> crucibleWrappers = new ArrayList<>();
         List<InfusionCategory.InfusionWrapper> infusionWrappers = new ArrayList<>();
-        List<String> handledClasses = new ArrayList<>();
         for (ResourceLocation string : ThaumcraftApi.getCraftingRecipes().keySet()) {
             IThaumcraftRecipe recipe = ThaumcraftApi.getCraftingRecipes().get(string);
             if (recipe instanceof CrucibleRecipe) {
                 crucibleWrappers.add(new CrucibleCategory.CrucibleWrapper((CrucibleRecipe) recipe));
-                if (!handledClasses.contains(recipe.getClass().getName()))
-                    handledClasses.add(recipe.getClass().getName());
             }
             if (recipe instanceof InfusionRecipe) {
                 if (((InfusionRecipe) recipe).getRecipeInput() != null && ((InfusionRecipe) recipe).recipeOutput != null)
                     infusionWrappers.add(new InfusionCategory.InfusionWrapper((InfusionRecipe) recipe));
-                if (!handledClasses.contains(recipe.getClass().getName()))
-                    handledClasses.add(recipe.getClass().getName());
             }
         }
         registry.addRecipes(CraftingManager.REGISTRY.getKeys().stream().map(CraftingManager.REGISTRY::getObject).filter(iRecipe -> iRecipe instanceof IArcaneRecipe).map(iRecipe -> new ArcaneWorkbenchCategory.ArcaneWorkbenchWrapper((IArcaneRecipe) iRecipe)).collect(Collectors.toList()), arcaneWorkbenchCategory.getUid());
