@@ -42,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
@@ -144,7 +145,11 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                                 e.printStackTrace();
                             }
                             return null;
-                        }).filter(Objects::nonNull).map(compound -> new ItemStack(compound)).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
+                        }).filter(Objects::nonNull).map(compound -> {
+                            ItemStack itemStack = new ItemStack(compound);
+                            itemStack.setCount(compound.getShort("Count"));
+                            return itemStack;
+                        }).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
                         int start = 0;
                         while (start < items.size()) {
                             wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(new AspectList().add(aspect, 1), items.subList(start, Math.min(start + 36, items.size()))));
@@ -204,7 +209,9 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                     ItemStack clone = stack.copy();
                     clone.setCount(list.getAmount(aspect));
                     AspectCache cache = aspectCacheHashMap.getOrDefault(aspect, new AspectCache(aspect.getTag()));
-                    cache.items.add(clone.serializeNBT().toString());
+                    NBTTagCompound nbtTagCompound = clone.serializeNBT();
+                    nbtTagCompound.setShort("Count", (short) clone.getCount());
+                    cache.items.add(nbtTagCompound.toString());
                     aspectCacheHashMap.put(aspect, cache);
                 }
             }
