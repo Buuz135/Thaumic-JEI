@@ -46,7 +46,7 @@ public class ThaumicConfig {
     public static boolean forceAspectTooltipInAllGUI = true;
 
     @Config.Comment("Hide recipes from JEI if you don't have the research for it")
-    public static boolean hideRecipesIfMissingResearch = true;
+    public static boolean hideRecipesIfMissingResearch = false;
 
     @Mod.EventBusSubscriber(modid = ThaumicJEI.MOD_ID)
     private static class EventHandler {
