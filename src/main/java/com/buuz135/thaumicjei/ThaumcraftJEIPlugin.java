@@ -146,8 +146,11 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                             }
                             return null;
                         }).filter(Objects::nonNull).map(compound -> {
+                            short trueCount = compound.getShort("Count");
+                            if (trueCount > Byte.MAX_VALUE)
+                                compound.setByte("Count", Byte.MAX_VALUE);
                             ItemStack itemStack = new ItemStack(compound);
-                            itemStack.setCount(compound.getShort("Count"));
+                            itemStack.setCount(trueCount);
                             return itemStack;
                         }).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
                         int start = 0;
