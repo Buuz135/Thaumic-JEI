@@ -120,7 +120,7 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setInput(ItemStack.class, recipe.getCatalyst().getMatchingStacks()[0]);
+            ingredients.setInput(ItemStack.class, recipe.getCatalyst());
             ingredients.setInputs(AspectList.class, Arrays.stream(recipe.getAspects().getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.getAspects().getAmount(aspect))).collect(Collectors.toList()));
             ingredients.setOutput(ItemStack.class, recipe.getRecipeOutput());
         }
