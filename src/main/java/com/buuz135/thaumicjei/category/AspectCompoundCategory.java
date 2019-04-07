@@ -21,6 +21,7 @@
  */
 package com.buuz135.thaumicjei.category;
 
+import com.buuz135.thaumicjei.ThaumcraftJEIPlugin;
 import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.IGuiHelper;
@@ -77,12 +78,12 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectCompoundWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 82, 2, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
-        recipeLayout.getIngredientsGroup(AspectList.class).init(1, true, new AspectIngredientRender(), 8, 2, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(AspectList.class).init(2, true, new AspectIngredientRender(), 46, 2, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(AspectList.class).set(1, ingredients.getInputs(AspectList.class).get(0));
-        recipeLayout.getIngredientsGroup(AspectList.class).set(2, ingredients.getInputs(AspectList.class).get(1));
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(0, false, new AspectIngredientRender(), 82, 2, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(0, ingredients.getOutputs(ThaumcraftJEIPlugin.ASPECT_LIST).get(0));
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(1, true, new AspectIngredientRender(), 8, 2, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(2, true, new AspectIngredientRender(), 46, 2, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(1, ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST).get(0));
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(2, ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST).get(1));
     }
 
 
@@ -96,8 +97,8 @@ public class AspectCompoundCategory implements IRecipeCategory<AspectCompoundCat
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setOutput(AspectList.class, new AspectList().add(aspect, 1));
-            ingredients.setInputs(AspectList.class, Arrays.stream(aspect.getComponents()).map(aspect1 -> new AspectList().add(aspect1, 1)).collect(Collectors.toList()));
+            ingredients.setOutput(ThaumcraftJEIPlugin.ASPECT_LIST, new AspectList().add(aspect, 1));
+            ingredients.setInputs(ThaumcraftJEIPlugin.ASPECT_LIST, Arrays.stream(aspect.getComponents()).map(aspect1 -> new AspectList().add(aspect1, 1)).collect(Collectors.toList()));
         }
 
         @Override

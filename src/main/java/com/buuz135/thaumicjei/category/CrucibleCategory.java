@@ -21,6 +21,7 @@
  */
 package com.buuz135.thaumicjei.category;
 
+import com.buuz135.thaumicjei.ThaumcraftJEIPlugin;
 import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.drawable.AlphaDrawable;
 import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
@@ -88,16 +89,16 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, CrucibleWrapper recipeWrapper, IIngredients ingredients) {
         recipeLayout.getItemStacks().init(0, false, 61 - 6, 8);
-        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
+        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 
         recipeLayout.getItemStacks().init(1, true, 2, 2);
-        recipeLayout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(0));
+        recipeLayout.getItemStacks().set(1, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
-        int center = (ingredients.getInputs(AspectList.class).size() * SPACE) / 2;
+        int center = (ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST).size() * SPACE) / 2;
         int x = 0;
-        for (List<AspectList> aspectList : ingredients.getInputs(AspectList.class)) {
-            recipeLayout.getIngredientsGroup(AspectList.class).init(x + 1, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
-            recipeLayout.getIngredientsGroup(AspectList.class).set(x + 1, aspectList);
+        for (List<AspectList> aspectList : ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST)) {
+            recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(x + 1, true, new AspectIngredientRender(), ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(x + 1, aspectList);
             ++x;
         }
     }
@@ -122,7 +123,7 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
         @Override
         public void getIngredients(IIngredients ingredients) {
             ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(recipe.getCatalyst().getMatchingStacks()));
-            ingredients.setInputs(AspectList.class, Arrays.stream(recipe.getAspects().getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.getAspects().getAmount(aspect))).collect(Collectors.toList()));
+            ingredients.setInputs(ThaumcraftJEIPlugin.ASPECT_LIST, Arrays.stream(recipe.getAspects().getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.getAspects().getAmount(aspect))).collect(Collectors.toList()));
             ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
         }
 

@@ -21,6 +21,7 @@
  */
 package com.buuz135.thaumicjei.category;
 
+import com.buuz135.thaumicjei.ThaumcraftJEIPlugin;
 import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.drawable.AlphaDrawable;
 import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
@@ -28,6 +29,7 @@ import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
@@ -96,10 +98,10 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, InfusionWrapper recipeWrapper, IIngredients ingredients) {
         recipeLayout.getItemStacks().init(0, false, 34 + 30, 7);
-        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
+        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
         int slot = 1;
         float currentRotation = -90.0F;
-        for (List<ItemStack> stacks : ingredients.getInputs(ItemStack.class)) {
+        for (List<ItemStack> stacks : ingredients.getInputs(VanillaTypes.ITEM)) {
             if (slot == 1) recipeLayout.getItemStacks().init(slot, true, 34 + 30, 75);
             else
                 recipeLayout.getItemStacks().init(slot, true, 30 + (int) (MathHelper.cos((float) (currentRotation / 180.0F * Math.PI)) * 40.0F) + 34, (int) (MathHelper.sin(currentRotation / 180.0F * 3.1415927F) * 40.0F) + 75);
@@ -107,11 +109,11 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
             currentRotation += (360f / recipeWrapper.recipe.getComponents().size());
             ++slot;
         }
-        int center = (ingredients.getInputs(AspectList.class).size() * SPACE) / 2;
+        int center = (ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST).size() * SPACE) / 2;
         int x = 0;
-        for (List<AspectList> aspectList : ingredients.getInputs(AspectList.class)) {
-            recipeLayout.getIngredientsGroup(AspectList.class).init(x + slot, true, new AspectIngredientRender(), 30 + ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
-            recipeLayout.getIngredientsGroup(AspectList.class).set(x + slot, aspectList);
+        for (List<AspectList> aspectList : ingredients.getInputs(ThaumcraftJEIPlugin.ASPECT_LIST)) {
+            recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(x + slot, true, new AspectIngredientRender(), 30 + ASPECT_X - center + x * SPACE, ASPECT_Y, 16, 16, 0, 0);
+            recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(x + slot, aspectList);
             ++x;
         }
     }
@@ -129,22 +131,22 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
             List<List<ItemStack>> inputs = new ArrayList<>();
             inputs.add(Arrays.asList(recipe.getRecipeInput().getMatchingStacks()));
             if (recipe.recipeOutput instanceof ItemStack) {
-                ingredients.setOutput(ItemStack.class, ((ItemStack) recipe.recipeOutput).copy());
+                ingredients.setOutput(VanillaTypes.ITEM, ((ItemStack) recipe.recipeOutput).copy());
             } else if (recipe.recipeOutput != null) {
                 for (ItemStack stack : inputs.get(0)) {
                     if (stack != null) {
                         Object[] objects = (Object[]) recipe.recipeOutput;
                         ItemStack copied = stack.copy();
                         copied.setTagInfo((String) objects[0], (NBTBase) objects[1]);
-                        ingredients.setOutput(ItemStack.class, copied);
+                        ingredients.setOutput(VanillaTypes.ITEM, copied);
                     }
                 }
             }
             for (Ingredient comp : recipe.getComponents()) {
                 inputs.add(Arrays.asList(comp.getMatchingStacks()));
             }
-            ingredients.setInputLists(ItemStack.class, inputs);
-            ingredients.setInputs(AspectList.class, Arrays.stream(recipe.aspects.getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.aspects.getAmount(aspect))).collect(Collectors.toList()));
+            ingredients.setInputLists(VanillaTypes.ITEM, inputs);
+            ingredients.setInputs(ThaumcraftJEIPlugin.ASPECT_LIST, Arrays.stream(recipe.aspects.getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.aspects.getAmount(aspect))).collect(Collectors.toList()));
         }
 
         @Override

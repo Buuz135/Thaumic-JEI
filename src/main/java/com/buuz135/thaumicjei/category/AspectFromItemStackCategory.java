@@ -21,12 +21,14 @@
  */
 package com.buuz135.thaumicjei.category;
 
+import com.buuz135.thaumicjei.ThaumcraftJEIPlugin;
 import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.drawable.AlphaDrawable;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
@@ -73,11 +75,11 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, AspectFromItemStackWrapper recipeWrapper, IIngredients ingredients) {
-        recipeLayout.getIngredientsGroup(AspectList.class).init(0, false, new AspectIngredientRender(), 8 + 81 - 9, 8, 16, 16, 0, 0);
-        recipeLayout.getIngredientsGroup(AspectList.class).set(0, ingredients.getOutputs(AspectList.class).get(0));
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).init(0, false, new AspectIngredientRender(), 8 + 81 - 9, 8, 16, 16, 0, 0);
+        recipeLayout.getIngredientsGroup(ThaumcraftJEIPlugin.ASPECT_LIST).set(0, ingredients.getOutputs(ThaumcraftJEIPlugin.ASPECT_LIST).get(0));
         int slot = 0;
         int row = 9;
-        for (List<ItemStack> stacks : ingredients.getInputs(ItemStack.class)) {
+        for (List<ItemStack> stacks : ingredients.getInputs(VanillaTypes.ITEM)) {
             recipeLayout.getItemStacks().init(slot + 1, true, (slot % row) * 18 - 18 * 3 - 21 + 81, (slot / row) * 18 + 32);
             recipeLayout.getItemStacks().set(slot + 1, stacks);
             ++slot;
@@ -97,8 +99,8 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setOutput(AspectList.class, aspect);
-            ingredients.setInputs(ItemStack.class, stacks);
+            ingredients.setOutput(ThaumcraftJEIPlugin.ASPECT_LIST, aspect);
+            ingredients.setInputs(VanillaTypes.ITEM, stacks);
         }
     }
 

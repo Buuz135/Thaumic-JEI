@@ -28,6 +28,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
@@ -111,10 +112,10 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
         int slot = 1;
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
-                if (ingredients.getInputs(ItemStack.class).size() >= slot) {
+                if (ingredients.getInputs(VanillaTypes.ITEM).size() >= slot) {
                     recipeLayout.getItemStacks().init(slot, true, 12 + (x * 30) + 30, 36 + 12 + (y) * 30);
-                    if (ingredients.getInputs(ItemStack.class).get(slot - 1) != null) {
-                        recipeLayout.getItemStacks().set(slot, ingredients.getInputs(ItemStack.class).get(slot - 1));
+                    if (ingredients.getInputs(VanillaTypes.ITEM).get(slot - 1) != null) {
+                        recipeLayout.getItemStacks().set(slot, ingredients.getInputs(VanillaTypes.ITEM).get(slot - 1));
                     }
                     ++slot;
                 }
@@ -132,7 +133,7 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
             }
         }
 
-        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
+        recipeLayout.getItemStacks().set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
     }
 
     @Override
@@ -160,8 +161,8 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
             for (Ingredient ingredient : input) {
                 lists.add(Arrays.asList(ingredient.getMatchingStacks()));
             }
-            ingredients.setInputLists(ItemStack.class, lists);
-            ingredients.setOutput(ItemStack.class, output);
+            ingredients.setInputLists(VanillaTypes.ITEM, lists);
+            ingredients.setOutput(VanillaTypes.ITEM, output);
         }
 
         @Override

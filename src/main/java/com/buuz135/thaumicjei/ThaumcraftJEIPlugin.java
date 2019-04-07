@@ -30,11 +30,12 @@ import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import com.buuz135.thaumicjei.ingredient.AspectListIngredientHelper;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.ingredients.VanillaTypes;
+import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
@@ -64,6 +65,7 @@ import java.util.stream.Collectors;
 public class ThaumcraftJEIPlugin implements IModPlugin {
 
     private static final String ASPECT_PATH = "." + File.separator + "config" + File.separator + "thaumicjei_itemstack_aspects.json";
+    public static final IIngredientType<AspectList> ASPECT_LIST = () -> AspectList.class;
 
     public static ArcaneWorkbenchCategory arcaneWorkbenchCategory;
     public static CrucibleCategory crucibleCategory;
@@ -81,7 +83,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registry) {
-        registry.register(AspectList.class, AspectIngredientFactory.create(), new AspectListIngredientHelper(), new AspectIngredientRender());
+        registry.register(ASPECT_LIST, AspectIngredientFactory.create(), new AspectListIngredientHelper(), new AspectIngredientRender());
     }
 
     @Override

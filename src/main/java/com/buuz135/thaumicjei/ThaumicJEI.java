@@ -29,14 +29,14 @@ import org.apache.logging.log4j.Logger;
         modid = ThaumicJEI.MOD_ID,
         name = ThaumicJEI.MOD_NAME,
         version = ThaumicJEI.VERSION,
-        dependencies = "required-after:jei@[1.12.2-4.10.0.198,);required-after:thaumcraft@[6.1.BETA20,);",
+        dependencies = "required-after:jei@[1.12.2-4.15.0.275,);required-after:thaumcraft@[6.1.BETA20,);",
         clientSideOnly = true
 )
 public class ThaumicJEI {
 
     public static final String MOD_ID = "thaumicjei";
     public static final String MOD_NAME = "ThaumicJEI";
-    public static final String VERSION = "1.2.1";
+    public static final String VERSION = "1.5.8";
     public static Logger LOGGER;
 
     /**
