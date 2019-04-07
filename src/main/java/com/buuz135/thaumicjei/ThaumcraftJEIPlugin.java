@@ -30,6 +30,7 @@ import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
 import com.buuz135.thaumicjei.ingredient.AspectListIngredientHelper;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.GsonBuilder;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
@@ -163,6 +164,8 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                     registry.addRecipes(wrappers, aspectFromItemStackCategory.getUid());
                     ThaumicJEI.LOGGER.info("Parsed aspect file in " + (System.currentTimeMillis() - time) + "ms");
                 } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
