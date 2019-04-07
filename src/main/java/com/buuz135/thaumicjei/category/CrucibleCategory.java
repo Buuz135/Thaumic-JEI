@@ -29,6 +29,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
@@ -120,9 +121,9 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            ingredients.setInput(ItemStack.class, recipe.getCatalyst());
+            ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(recipe.getCatalyst().getMatchingStacks()));
             ingredients.setInputs(AspectList.class, Arrays.stream(recipe.getAspects().getAspectsSortedByAmount()).map(aspect -> new AspectList().add(aspect, recipe.getAspects().getAmount(aspect))).collect(Collectors.toList()));
-            ingredients.setOutput(ItemStack.class, recipe.getRecipeOutput());
+            ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
         }
 
         @Override
