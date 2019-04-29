@@ -74,6 +74,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
     public static AspectCompoundCategory aspectCompoundCategory;
     public static IJeiRuntime runtime;
     public static HashMap<IRecipeWrapper, String> recipes = new HashMap<>();
+    public static Thread aspectCacheThread;
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -126,13 +127,14 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
 
         if (ThaumicConfig.enableAspectFromItemStacks) {
             File aspectFile = new File(ASPECT_PATH);
-            if (!aspectFile.exists() || ThaumicConfig.alwaysRecreateAspectFromItemStackFile) {
-                new Thread(() -> {
+            if (aspectCacheThread == null && (!aspectFile.exists() || ThaumicConfig.alwaysRecreateAspectFromItemStackFile)) {
+                aspectCacheThread = new Thread(() -> {
                     ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
                     ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
                     createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
                     ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
-                }, "ThaumicJEI Aspect Cache").start();
+                }, "ThaumicJEI Aspect Cache");
+                aspectCacheThread.start();
             }
             if (aspectFile.exists()) {
                 try {
