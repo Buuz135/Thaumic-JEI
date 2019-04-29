@@ -152,12 +152,18 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                             }
                             return null;
                         }).filter(Objects::nonNull).map(compound -> {
-                            short trueCount = compound.getShort("Count");
-                            if (trueCount > Byte.MAX_VALUE)
-                                compound.setByte("Count", Byte.MAX_VALUE);
-                            ItemStack itemStack = new ItemStack(compound);
-                            itemStack.setCount(trueCount);
-                            return itemStack;
+                            try {
+                                short trueCount = compound.getShort("Count");
+                                if (trueCount <= 0) return ItemStack.EMPTY;
+                                if (trueCount > Byte.MAX_VALUE)
+                                    compound.setByte("Count", Byte.MAX_VALUE);
+                                ItemStack itemStack = new ItemStack(compound);
+                                itemStack.setCount(trueCount);
+                                return itemStack;
+                            } catch (ClassCastException e) {
+
+                            }
+                            return ItemStack.EMPTY;
                         }).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
                         int start = 0;
                         while (start < items.size()) {
@@ -219,7 +225,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
             if (list.size() > 0) {
                 for (Aspect aspect : list.getAspects()) {
                     ItemStack clone = stack.copy();
-                    clone.setCount(list.getAmount(aspect));
+                    clone.setCount(Math.max(list.getAmount(aspect), 1));
                     AspectCache cache = aspectCacheHashMap.getOrDefault(aspect, new AspectCache(aspect.getTag()));
                     NBTTagCompound nbtTagCompound = clone.serializeNBT();
                     nbtTagCompound.setShort("Count", (short) clone.getCount());
