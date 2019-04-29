@@ -24,6 +24,7 @@ package com.buuz135.thaumicjei.category;
 import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.drawable.AlphaDrawable;
 import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
+import com.buuz135.thaumicjei.util.ResearchUtils;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -34,6 +35,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +43,7 @@ import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.capabilities.ThaumcraftCapabilities;
 import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
@@ -168,13 +171,18 @@ public class ArcaneWorkbenchCategory implements IRecipeCategory<ArcaneWorkbenchC
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             minecraft.fontRenderer.drawString(TextFormatting.DARK_GRAY + String.valueOf(recipe.getVis()), 50 - minecraft.fontRenderer.getStringWidth(String.valueOf(recipe.getVis())) / 2, 12, 0);
+            if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()))
+                minecraft.getRenderItem().renderItemIntoGUI(new ItemStack(Blocks.BARRIER), 15, 8);
         }
 
         @Nullable
         @Override
         public List<String> getTooltipStrings(int mouseX, int mouseY) {
-            if (mouseX > -18 && mouseX < 34 && mouseY > 4 && mouseY < 28) {
+            if (mouseX > 34 && mouseX < 60 && mouseY > 4 && mouseY < 28) {
                 return Arrays.asList("Vis Cost");
+            }
+            if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()) && mouseX > 10 && mouseX < 34 && mouseY > 4 && mouseY < 28) {
+                return ResearchUtils.generateMissingResearchList(getResearch());
             }
             return null;
         }

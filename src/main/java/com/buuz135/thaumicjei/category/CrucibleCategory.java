@@ -26,6 +26,7 @@ import com.buuz135.thaumicjei.ThaumicJEI;
 import com.buuz135.thaumicjei.drawable.AlphaDrawable;
 import com.buuz135.thaumicjei.drawable.ItemStackDrawable;
 import com.buuz135.thaumicjei.ingredient.AspectIngredientRender;
+import com.buuz135.thaumicjei.util.ResearchUtils;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -36,10 +37,12 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.capabilities.ThaumcraftCapabilities;
 import thaumcraft.api.crafting.CrucibleRecipe;
 
 import javax.annotation.Nullable;
@@ -129,7 +132,16 @@ public class CrucibleCategory implements IRecipeCategory<CrucibleCategory.Crucib
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+            if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()))
+                minecraft.getRenderItem().renderItemIntoGUI(new ItemStack(Blocks.BARRIER), 22, 14);
+        }
 
+        @Override
+        public List<String> getTooltipStrings(int mouseX, int mouseY) {
+            if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()) && mouseX > 22 && mouseX < 40 && mouseY > 14 && mouseY < 30) {
+                return ResearchUtils.generateMissingResearchList(getResearch());
+            }
+            return null;
         }
 
         @Override
