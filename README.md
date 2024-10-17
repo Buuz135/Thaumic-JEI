@@ -1,4 +1,4 @@
-# Thaumic-JEI [![Curse Forge](http://cf.way2muchnoise.eu/full_thaumic-jei_downloads.svg)](https://minecraft.curseforge.com/projects/thaumic-jei) [![Curse Forge](http://cf.way2muchnoise.eu/versions/thaumic-jei.svg)](https://minecraft.curseforge.com/projects/thaumic-jei) [![GitHub issues](https://img.shields.io/github/issues/Buuz135/thaumic-jei.svg)](https://github.com/Buuz135/thaumic-jei/issues) [![license](https://img.shields.io/github/license/Buuz135/thaumic-jei.svg)]() 
+# Thaumic-JEI [![Curse Forge](http://cf.way2muchnoise.eu/285492.svg)](https://minecraft.curseforge.com/projects/thaumic-jei) [![Curse Forge](http://cf.way2muchnoise.eu/versions/285492.svg)](https://minecraft.curseforge.com/projects/thaumic-jei) [![GitHub issues](https://img.shields.io/github/issues/Buuz135/thaumic-jei.svg)](https://github.com/Buuz135/thaumic-jei/issues) [![license](https://img.shields.io/github/license/Buuz135/thaumic-jei.svg)]() 
 
 A JEI and Thaumcraft addon that displays thaumcraft recipes in JEI.
  
